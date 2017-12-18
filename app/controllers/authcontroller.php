@@ -6,6 +6,7 @@ use PHPMVC\lib\Messenger;
 use PHPMVC\Models\UserGroupPrivilegeModel;
 use PHPMVC\Models\UserModel;
 use PHPMVC\Models\UserProfileModel;
+use PHPMVC\Models\UserSettingsModel;
 
 class AuthController extends AbstractController
 {
@@ -24,6 +25,13 @@ class AuthController extends AbstractController
             setcookie('menu_opened', 'true', (time()+60*60*24*180), '/', str_replace('www', '', $_SERVER['HTTP_HOST']));
         }
 
+        $appDisabled = UserSettingsModel::getByKeyGeneral('DisableApp');
+
+        if((int) $appDisabled->TheValue === 2) {
+            $appDisabledMessage = UserSettingsModel::getByKeyGeneral('DisableAppMessage');
+            $this->_data['disabled'] = $appDisabledMessage->TheValue;
+        }
+
         $this->_view();
     }
 
@@ -34,8 +42,13 @@ class AuthController extends AbstractController
             if($isAuthorized === false) {
                 echo 3;
             } elseif ($isAuthorized instanceof UserModel) {
-                $this->session->tu = $isAuthorized;
-                echo 1;
+                $appDisabled = UserSettingsModel::getByKeyGeneral('DisableApp');
+                if((int) $appDisabled->TheValue === 2 && (int) $isAuthorized->GroupId !== 4) {
+                    echo 2;
+                } else {
+                    $this->session->tu = $isAuthorized;
+                    echo 1;
+                }
             } elseif ($isAuthorized == 2) {
                 echo 2;
             }

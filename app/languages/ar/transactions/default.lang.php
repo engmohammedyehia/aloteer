@@ -2,6 +2,7 @@
 
 $_['title'] = 'معاملات العملاء';
 $_['text_add'] = 'إضافة معاملة جديدة';
+$_['text_table_transaction_id'] = 'مسلسل';
 $_['text_table_transaction_title'] = 'عنوان المعاملة';
 $_['text_table_transaction_created'] = 'بتاريخ';
 $_['text_table_transaction_updated'] = 'حدثت بتاريخ';
@@ -10,6 +11,7 @@ $_['text_table_transaction_branch'] = 'الفرع';
 $_['text_table_transaction_client'] = 'العميل';
 $_['text_table_transaction_user'] = 'أنشأها';
 $_['text_table_transaction_status'] = 'حالة المعاملة';
+$_['text_table_transaction_satisfied'] = 'استوفت الشروط؟';
 $_['text_table_control'] = 'التحكم';
 $_['text_table_control_view'] = 'عرض بيانات المعاملة';
 $_['text_table_control_timeline'] = 'تقرير مسار المعاملة';
@@ -20,3 +22,10 @@ $_['text_table_control_delete_confirm'] = 'هل تود فعلا حذف العم�
 $_['text_table_control_assign_for_audition'] = 'اصدار امر مراجعة';
 $_['text_table_control_fulfilled'] = 'مراجعة المعاملة';
 $_['text_table_control_status_create_1'] = 'اعتماد إنشاء المعاملة';
+$_['text_table_control_order_cheque'] = 'إصدار أمر طباعة شيك';
+$_['text_table_control_executive_confirm'] = 'تاكيد صحة المعاملة';
+$_['text_table_control_executive_confirm_confirm'] = 'هل تود تأكيد صحة و سلامة المعاملة؟';
+$_['text_table_control_cover'] = 'عرض غلاف المعاملة';
+$_['text_table_control_confirm_cheque_ready'] = 'اعتماد الشيك للصرف';
+$_['text_table_control_close'] = 'إغلاق المعاملة';
+$_['text_table_control_close_confirm'] = 'هل تود فعلا إغلاق المعاملة؟';

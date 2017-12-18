@@ -50,7 +50,7 @@ class TransactionConditionsController extends AbstractController
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/transactionconditions');
             } else {
-                $this->messenger->add($this->language->get('message_save_success'), Messenger::APP_MESSAGE_ERROR);
+                $this->messenger->add($this->language->get('message_save_failed'), Messenger::APP_MESSAGE_ERROR);
             }
         }
 
@@ -88,7 +88,7 @@ class TransactionConditionsController extends AbstractController
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/transactionconditions');
             } else {
-                $this->messenger->add($this->language->get('message_save_success'), Messenger::APP_MESSAGE_ERROR);
+                $this->messenger->add($this->language->get('message_save_failed'), Messenger::APP_MESSAGE_ERROR);
             }
         }
 
@@ -110,7 +110,7 @@ class TransactionConditionsController extends AbstractController
         if($condition->delete()) {
             $this->messenger->add($this->language->get('message_delete_success'));
         } else {
-            $this->messenger->add($this->language->get('message_delete_success'), Messenger::APP_MESSAGE_ERROR);
+            $this->messenger->add($this->language->get('message_delete_failed'), Messenger::APP_MESSAGE_ERROR);
         }
 
         $this->redirect('/transactionconditions');

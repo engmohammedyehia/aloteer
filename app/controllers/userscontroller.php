@@ -1,6 +1,7 @@
 <?php
 namespace PHPMVC\Controllers;
 
+use PHPMVC\lib\FileUpload;
 use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
 use PHPMVC\lib\Messenger;
@@ -8,6 +9,7 @@ use PHPMVC\Models\BranchModel;
 use PHPMVC\Models\UserGroupModel;
 use PHPMVC\Models\UserModel;
 use PHPMVC\Models\UserProfileModel;
+use PHPMVC\Models\UserSettingsModel;
 
 class UsersController extends AbstractController
 {
@@ -71,6 +73,11 @@ class UsersController extends AbstractController
 
             if(UserModel::userExists($user->Username)) {
                 $this->messenger->add($this->language->get('message_user_exists'), Messenger::APP_MESSAGE_ERROR);
+                $this->redirect('/users');
+            }
+
+            if(UserModel::emailExists($user->Email)) {
+                $this->messenger->add($this->language->get('message_email_exists'), Messenger::APP_MESSAGE_ERROR);
                 $this->redirect('/users');
             }
 
@@ -145,6 +152,13 @@ class UsersController extends AbstractController
 
         $this->language->load('users.messages');
 
+        $records = $user->getUserRecords()->current();
+
+        if ($records->c1 > 0 || $records->c2 > 0 || $records->c3 > 0 || $records->c4 > 0 || $records->c5 > 0 || $records->c6 > 0 || $records->c7 > 0 || $records->c8 > 0) {
+            $this->messenger->add($this->language->get('message_user_has_records'), Messenger::APP_MESSAGE_ERROR);
+            $this->redirect('/users');
+        }
+
         $profile = UserProfileModel::getByPK($user->UserId);
 
         if($profile->delete() && $user->delete()) {
@@ -153,6 +167,143 @@ class UsersController extends AbstractController
             $this->messenger->add($this->language->get('message_delete_failed'), Messenger::APP_MESSAGE_ERROR);
         }
         $this->redirect('/users');
+    }
+
+    public function _forceDeleteAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+        $user = UserModel::getByPK($id);
+
+        if($user === false || $this->session->u->UserId == $id) {
+            $this->redirect('/users');
+        }
+
+        $this->language->load('users.messages');
+
+        if($user->superAdminDelete()) {
+            $this->messenger->add($this->language->get('message_delete_success'));
+        } else {
+            $this->messenger->add($this->language->get('message_delete_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+        $this->redirect('/users');
+    }
+
+    public function profileAction()
+    {
+        $profile = $this->_data['profile'] = $this->session->u->profile;
+        $user = $this->_data['user'] = $this->session->u;
+
+        $this->language->load('template.common');
+        $this->language->load('users.profile');
+        $this->language->load('users.labels');
+        $this->language->load('users.messages');
+        $this->language->load('validation.errors');
+
+        if(isset($_POST['submit']) && $this->requestHasValidToken()) {
+
+            $profile->FirstName = $this->filterString($_POST['FirstName']);
+            $profile->LastName = $this->filterString($_POST['LastName']);
+            $profile->Address = $this->filterString($_POST['Address']);
+            $profile->DOB = $this->filterString($_POST['DOB']);
+            $user->PhoneNumber = $this->filterString($_POST['PhoneNumber']);
+
+            if(!empty($_FILES['Image']['name'])) {
+                $uploader = new FileUpload($_FILES['Image']);
+                try {
+                    $uploader->remove($profile->Image);
+                    $uploader->upload();
+                    $profile->Image = $uploader->getFileName();
+                } catch (\Exception $e) {
+                    $this->messenger->add($e->getMessage(), Messenger::APP_MESSAGE_ERROR);
+                }
+            }
+
+            if(!$uploader->hasError && $profile->save() && $user->save()) {
+                $user->profile = $profile;
+                $this->session->u = $user;
+                $this->messenger->add($this->language->get('message_profile_saved_success'));
+                $this->redirect('/users/profile');
+            } else {
+                $this->messenger->add($this->language->get('message_profile_saved_failed'), Messenger::APP_MESSAGE_ERROR);
+            }
+        }
+
+        $this->_view();
+    }
+
+    public function changePasswordAction()
+    {
+        $user = $this->_data['user'] = $this->session->u;
+
+        $this->language->load('template.common');
+        $this->language->load('users.changepassword');
+        $this->language->load('users.labels');
+        $this->language->load('users.messages');
+        $this->language->load('validation.errors');
+
+        if(isset($_POST['submit']) && $this->requestHasValidToken()) {
+            $newPassword = $_POST['Password'];
+            $newPasswordConfirmed = $_POST['PasswordConfirm'];
+            $oldPassword = crypt($_POST['OldPassword'], APP_SALT);
+            if($oldPassword !== $user->Password) {
+                $this->messenger->add($this->language->get('message_old_password_wrong'), Messenger::APP_MESSAGE_ERROR);
+            } elseif($newPassword !== $newPasswordConfirmed) {
+                $this->messenger->add($this->language->get('message_password_no_match'), Messenger::APP_MESSAGE_ERROR);
+            } else {
+                $user->Password = crypt($newPassword, APP_SALT);
+                $user->save();
+                $this->session->u = $user;
+                $this->messenger->add($this->language->get('message_change_success'));
+                $this->redirect('/users/changepassword');
+            }
+        }
+
+        $this->_view();
+    }
+
+    public function settingsAction()
+    {
+
+        $this->language->load('template.common');
+        $this->language->load('users.settings');
+        $this->language->load('users.labels');
+        $this->language->load('users.messages');
+        $this->language->load('validation.errors');
+
+        $userSettings = UserSettingsModel::getUserSettings($this->session->u);
+        $userSettingsFiltered = [];
+
+        if(false !== $userSettings) {
+            foreach ($userSettings as $userSetting) {
+                $userSettingsFiltered[$userSetting['TheKey']] = $userSetting['TheValue'];
+            }
+        }
+
+        $this->_data['userSettings'] = $userSettingsFiltered;
+        $doneSaving = false;
+
+        if(isset($_POST['submit']) && $this->requestHasValidToken()) {
+            foreach ($_POST as $key => $value) {
+                if($key === 'token' || $key === 'submit') continue;
+                $settings = UserSettingsModel::getByKey($key, $this->session->u);
+                if(false === $settings) {
+                    $settings = new UserSettingsModel();
+                    $settings->TheKey = $key;
+                    $settings->UserId = $this->session->u->UserId;
+                }
+                $settings->TheValue = $_POST[$key] === '' ? '' : $this->filterString($value);
+                if($settings->save()) {
+                    if($doneSaving === true) continue;
+                    $this->messenger->add($this->language->get('message_settings_saved_success'));
+                    $doneSaving = true;
+                } else {
+                    $this->messenger->add($this->language->get('message_settings_saved_failed'), Messenger::APP_MESSAGE_ERROR);
+                }
+            }
+            $this->redirect('/users/settings');
+        }
+
+        $this->_view();
     }
 
     public function resetPasswordAction()

@@ -1,6 +1,8 @@
 <?php
 namespace PHPMVC\Models;
 
+use PHPMVC\Lib\Database\DatabaseHandler;
+
 class UserModel extends AbstractModel
 {
     public $UserId;
@@ -46,7 +48,14 @@ class UserModel extends AbstractModel
     public static function getUsers(UserModel $user)
     {
         return self::get(
-        'SELECT au.*, aug.GroupName GroupName, ab.BranchName BranchName FROM ' . self::$tableName . ' au INNER JOIN app_users_groups aug ON aug.GroupId = au.GroupId INNER JOIN app_branches ab ON ab.BranchId = au.BranchId WHERE au.UserId != ' . $user->UserId
+        'SELECT au.*, aug.GroupName GroupName, ab.BranchName BranchName, aup.FirstName, aup.LastName FROM ' . self::$tableName . ' au INNER JOIN app_users_groups aug ON aug.GroupId = au.GroupId INNER JOIN app_branches ab ON ab.BranchId = au.BranchId INNER JOIN app_users_profiles aup ON aup.UserId = au.UserId WHERE au.UserId != ' . $user->UserId
+        );
+    }
+
+    public static function getUsersByType($type, $branch = false)
+    {
+        return self::get(
+            'SELECT au.*, aug.GroupName GroupName, ab.BranchName BranchName, CONCAT_WS(" ", aup.FirstName, aup.LastName) Name FROM ' . self::$tableName . ' au INNER JOIN app_users_groups aug ON aug.GroupId = au.GroupId INNER JOIN app_branches ab ON ab.BranchId = au.BranchId INNER JOIN app_users_profiles aup ON aup.UserId = au.UserId WHERE au.GroupId = ' . $type . ((false !== $branch) ? ' AND au.BranchId = ' . $branch : '')
         );
     }
 
@@ -57,11 +66,21 @@ class UserModel extends AbstractModel
         ');
     }
 
+    public static function emailExists($email)
+    {
+        return self::get('
+            SELECT * FROM ' . self::$tableName . ' WHERE Email = "' . $email . '"
+        ');
+    }
+
     public static function authenticate ($username, $password, $session)
     {
         $password = crypt($password, APP_SALT) ;
         $sql = 'SELECT *, (SELECT GroupName FROM app_users_groups WHERE app_users_groups.GroupId = ' . self::$tableName . '.GroupId) GroupName FROM ' . self::$tableName . ' WHERE Username = "' . $username . '" AND Password = "' .  $password . '"';
         $foundUser = self::getOne($sql);
+
+        $appDisables = UserSettingsModel::getByKeyGeneral('DisableApp');
+
         if(false !== $foundUser) {
             if($foundUser->Status == 2) {
                 return 2;
@@ -71,5 +90,26 @@ class UserModel extends AbstractModel
             return $foundUser;
         }
         return false;
+    }
+
+    public function getUserRecords ()
+    {
+        return self::get(
+            'SELECT UserId, 
+                  (SELECT COUNT(*) FROM app_cheques WHERE UserId = ' . $this->UserId . ' LIMIT 1) c1, 
+                  (SELECT COUNT(*) FROM app_mail WHERE receiverId = ' . $this->UserId . ' or senderId = ' . $this->UserId . ' LIMIT 1) c2, 
+                  (SELECT COUNT(*) FROM app_notifications WHERE UserId = ' . $this->UserId . ') c3,
+                  (SELECT COUNT(*) FROM app_transactions WHERE UserId = ' . $this->UserId . ') c4,
+                  (SELECT COUNT(*) FROM app_transactions_audit_assignments WHERE UserId = ' . $this->UserId . ') c5,
+                  (SELECT COUNT(*) FROM app_transactions_audit_assignments_results WHERE UserId = ' . $this->UserId . ') c6, 
+                  (SELECT COUNT(*) FROM app_transactions_statuses WHERE UserId = ' . $this->UserId . ') c7,
+                  (SELECT COUNT(*) FROM app_users_settings WHERE UserId = ' . $this->UserId . ') c8 
+                  FROM app_users WHERE UserId = ' . $this->UserId
+        );
+    }
+
+    public function superAdminDelete ()
+    {
+
     }
 }

@@ -14,8 +14,12 @@
                 <td><?= $privilege->PrivilegeTitle ?></td>
                 <td style="direction: ltr"><?= $privilege->Privilege ?></td>
                 <td>
-                    <a href="/privileges/edit/<?= $privilege->PrivilegeId ?>"><i class="fa fa-edit"></i></a>
-                    <a href="/privileges/delete/<?= $privilege->PrivilegeId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i></a>
+                    <?php if(array_key_exists('/privileges/edit', $__privilegesKeys)): ?>
+                        <a href="/privileges/edit/<?= $privilege->PrivilegeId ?>"><i class="fa fa-edit"></i></a>
+                    <?php endif; ?>
+                    <?php if(array_key_exists('/privileges/delete', $__privilegesKeys)): ?>
+                        <a href="/privileges/delete/<?= $privilege->PrivilegeId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i></a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; endif; ?>

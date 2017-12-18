@@ -4,6 +4,7 @@ namespace PHPMVC\LIB;
 class Language 
 {
     private $dictionary = [];
+    private $baseDictioinary = [];
 
     public function load($path)
     {
@@ -11,6 +12,7 @@ class Language
         if(isset($_SESSION['lang'])) {
             $defaultLanguage = $_SESSION['lang'];
         }
+        $defaultLanguageFileToLoad = LANGUAGES_PATH . APP_DEFAULT_LANGUAGE . DS . str_replace('.', DS , $path) . '.lang.php';
         $languageFileToLoad = LANGUAGES_PATH . $defaultLanguage . DS . str_replace('.', DS , $path) . '.lang.php';
         if(file_exists($languageFileToLoad)) {
             require $languageFileToLoad;
@@ -19,8 +21,25 @@ class Language
                     $this->dictionary[$key] = $value;
                 }
             }
+            require $defaultLanguageFileToLoad;
+            if(is_array($_) && !empty($_)) {
+                foreach ($_ as $key => $value) {
+                    $this->baseDictioinary[$key] = $value;
+                }
+            }
+            $missingKeys = array_values(array_diff(array_keys($this->baseDictioinary), array_keys($this->dictionary)));
+            foreach ($missingKeys as $missingKey) {
+                $this->dictionary[$missingKey] = $this->baseDictioinary[$missingKey];
+            }
+            $this->baseDictioinary = [];
         } else {
-            trigger_error('Sorry the language file ' . $path . ' doens\'t exists', E_USER_WARNING);
+            $defaultLanguageFileToLoad = LANGUAGES_PATH . APP_DEFAULT_LANGUAGE . DS . str_replace('.', DS , $path) . '.lang.php';
+            require $defaultLanguageFileToLoad;
+            if(is_array($_) && !empty($_)) {
+                foreach ($_ as $key => $value) {
+                    $this->dictionary[$key] = $value;
+                }
+            }
         }
     }
 

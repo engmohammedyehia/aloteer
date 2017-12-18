@@ -8,6 +8,7 @@ use PHPMVC\Lib\Registry;
 use PHPMVC\LIB\FrontController;
 use PHPMVC\LIB\Language;
 use PHPMVC\LIB\SessionManager;
+use PHPMVC\Lib\Startup;
 use PHPMVC\LIB\Template\Template;
 
 if(!defined('DS')) {
@@ -37,10 +38,13 @@ $messenger = Messenger::getInstance($session);
 
 $authentication = Authentication::getInstance($session);
 
+$startup = new Startup($session, $authentication);
+
 $registry = Registry::getInstance();
 $registry->session = $session;
 $registry->language = $language;
 $registry->messenger = $messenger;
+$registry->startup = $startup;
 
 $frontController = new FrontController($template, $registry, $authentication);
 $frontController->dispatch();

@@ -14,8 +14,12 @@
                 <td class="controls_td">
                     <a href="javascript:;" class="open_controls"><i class="fa fa-caret-square-o-left"></i></a>
                     <div class="controls_container">
-                        <a href="/transactiontypes/edit/<?= $type->TransactionTypeId ?>"><i class="fa fa-edit"></i> <?= $text_table_control_edit ?></a>
-                        <a href="/transactiontypes/delete/<?= $type->TransactionTypeId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i> <?= $text_table_control_delete ?></a>
+                        <?php if(array_key_exists('/transactiontypes/edit', $__privilegesKeys)): ?>
+                            <a href="/transactiontypes/edit/<?= $type->TransactionTypeId ?>"><i class="fa fa-edit"></i> <?= $text_table_control_edit ?></a>
+                        <?php endif; ?>
+                        <?php if(array_key_exists('/transactiontypes/delete', $__privilegesKeys)): ?>
+                            <a href="/transactiontypes/delete/<?= $type->TransactionTypeId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i> <?= $text_table_control_delete ?></a>
+                        <?php endif; ?>
                     </div>
                 </td>
             </tr>

@@ -12,8 +12,12 @@
             <tr>
                 <td><?= $group->GroupName ?></td>
                 <td>
-                    <a href="/usersgroups/edit/<?= $group->GroupId ?>"><i class="fa fa-edit"></i></a>
-                    <a href="/usersgroups/delete/<?= $group->GroupId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i></a>
+                    <?php if(array_key_exists('/usersgroups/edit', $__privilegesKeys)): ?>
+                        <a href="/usersgroups/edit/<?= $group->GroupId ?>"><i class="fa fa-edit"></i></a>
+                    <?php endif; ?>
+                    <?php if(array_key_exists('/usersgroups/delete', $__privilegesKeys)): ?>
+                        <a href="/usersgroups/delete/<?= $group->GroupId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i></a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; endif; ?>

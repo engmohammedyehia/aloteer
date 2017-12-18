@@ -309,6 +309,9 @@ div.wrapper header.main div.user_menu_container ul.user_menu.mail li a img {
     float: right;
     margin-left: 5px;
     margin-bottom: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
 }
 
 div.wrapper header.main div.user_menu_container ul.user_menu.mail li a span {
@@ -387,6 +390,12 @@ div.wrapper nav.main_navigation div.profile_picture {
     border-radius: 80px;
     border: solid 5px #FFF;
     margin: 20px auto;
+}
+
+div.wrapper nav.main_navigation div.profile_picture img {
+    height: 80px;
+    width: 80px;
+    border-radius: 80px;
 }
 
 div.wrapper nav.main_navigation div.employee_info span.name,
@@ -731,6 +740,10 @@ div.wrapper div.action_view form.appForm div.input_wrapper_other {
     border-bottom: solid 1px #e4e4e4;
 }
 
+div.wrapper div.action_view form.appForm div.input_wrapper_other.up_down_padding {
+    padding: 10px 0;
+}
+
 div.wrapper div.action_view form.appForm div.input_wrapper_other:last-child {
     border-bottom: none;
 }
@@ -1024,16 +1037,17 @@ div.wrapper div.action_view form.appForm div.input_wrapper.padding input {
     padding: 0 10px;
 }
 
-div.wrapper div.action_view form.appForm input[type=submit] {
+div.wrapper div.action_view form.appForm input[type=submit],
+div.wrapper div.action_view form.appForm button {
     width: 80px;
     font-size: 1em;
     color: #FFF;
     padding: 5px;
     line-height: 1.5;
     background: #408eba;
-    margin: 10px 0;
+    margin: 10px 10px 10px 0;
     float: left;
-    clear: both;
+    /*clear: both;*/
     transition: all 0.3s ease-in-out;
     box-sizing: border-box;
     border: solid 1px transparent;
@@ -1811,7 +1825,7 @@ div.stat_raw div.chart div.timeline div.timeline_item {
     margin: 10px 1px;
     background-color: #f5f5f5;
     padding: 10px 10px 7px 10px;
-    height: 40px;
+    min-height: 40px;
 }
 
 div.stat_raw div.chart div.timeline div.timeline_item:hover {
@@ -1822,6 +1836,9 @@ div.stat_raw div.chart div.timeline div.timeline_item img {
     display: block;
     float: right;
     margin: 0 0 10px 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
 }
 
 div.stat_raw div.chart div.timeline div.timeline_item i {
@@ -1835,12 +1852,17 @@ div.stat_raw div.chart div.timeline div.timeline_item span:first-of-type {
     display: block;
     font-family: "Neo Sans Arabic Medium" !important;
     font-size: 0.85em;
+    margin-bottom: 7px;
 }
 
 div.stat_raw div.chart div.timeline div.timeline_item span:nth-of-type(2) {
     display: block;
     font-size: 0.85em;
     margin-top: 5px;
+}
+
+div.stat_raw div.chart div.timeline div.timeline_item span:nth-of-type(2) i {
+    font-size: 1.2em;
 }
 
 td.controls_td,
@@ -1901,9 +1923,109 @@ td.controls_td div.controls_container a:last-child {
     border: none;
 }
 
+div.cheque_print {
+    display: none;
+    width: 1000px;
+    height: 439px;
+    position: relative;
+}
 
+div.cheque_print div.cheque_date {
+    position: absolute;
+    top:22px;
+    right: 70px;
+}
 
+div.cheque_print div.cheque_number {
+    position: absolute;
+    top:22px;
+    left: 100px;
+}
 
+div.cheque_print div.cheque_branch {
+    position: absolute;
+    top:57px;
+    right: 70px;
+}
+
+div.cheque_print div.cheque_client {
+    position: absolute;
+    top:145px;
+    right: 250px;
+}
+
+div.cheque_print div.cheque_amount {
+    position: absolute;
+    top:230px;
+    right: 75px;
+}
+
+div.cheque_print div.cheque_amount_literal {
+    position: absolute;
+    top:206px;
+    right: 355px;
+}
+
+div.cheque_print div.cheque_reason {
+    position: absolute;
+    top:245px;
+    right: 270px;
+}
+
+div.messageContainer div.message_tools {
+    float: left;
+    background: #f1f1f1;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+    height: 40px;
+    overflow: hidden;
+}
+
+div.messageContainer div.message_tools a:link,
+div.messageContainer div.message_tools a:visited {
+    display: block;
+    float: right;
+    border-left: solid 1px #e4e4e4;
+    width: 40px;
+    height: 30px;
+    padding-top: 12px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+div.messageContainer div.message_tools a:hover,
+div.messageContainer div.message_tools a:active {
+    background: #0077b5;
+    color: #FFF;
+    border-left: solid 1px #0077b5;
+}
+
+div.messageContainer div.message_tools a:last-child {
+    border-left: none;
+}
+
+div.messageContainer h3 {
+    float: right;
+    color: #0077b5;
+    font-family: "Neo Sans Arabic Medium" !important;
+}
+
+div.messageContainer div.message_body {
+    clear: left;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+td.unread a {
+    color: #0077b5;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+td.read a {
+    color: #666;
+}
 
 
 
@@ -2031,9 +2153,7 @@ td.controls_td div.controls_container a:last-child {
 @media print {
     *,
     *:before,
-    *:after,
-    *:first-letter,
-    *:first-line {
+    *:after {
         background: transparent !important;
         color: #000 !important; /* Black prints faster:
                                    http://www.sanbeiji.com/archives/953 */
@@ -2098,6 +2218,22 @@ td.controls_td div.controls_container a:last-child {
     h2,
     h3 {
         page-break-after: avoid;
+    }
+
+    header.main, nav.main_navigation, form.appForm {
+        display: none;
+    }
+
+    div.wrapper div.action_view.collapsed {
+        margin-right: 0;
+    }
+
+    div.wrapper div.action_view {
+        padding: 0;
+    }
+
+    div.cheque_print {
+        display: block;
     }
 }
 

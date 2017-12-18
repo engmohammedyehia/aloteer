@@ -12,7 +12,7 @@ class BankAccountsController extends AbstractController
 
     private $_createActionRoles =
     [
-        'BankName'              => 'req|num|between(1,13)',
+        'BankName'              => 'req|alpha|between(5,30)',
         'BankAccountNumber'     => 'req|num|max(20)|lang(en)',
         'BankAccountIBAN'       => 'req|alphanum|max(30)|lang(en)'
     ];

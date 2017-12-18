@@ -1,3 +1,4 @@
+<?= isset($disabled) ? '<p style="padding: 8px;background: #900; color: #FFF;text-align: center">' . $disabled . '</p>' : '' ?>
 <div class="action_view login">
     <?php $messages = $this->messenger->getMessages(); if(!empty($messages)): foreach ($messages as $message): ?>
         <p class="message t<?= $message[1] ?>"><?= $message[0] ?><a href="" class="closeBtn"><i class="fa fa-times"></i></a></p>

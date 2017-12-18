@@ -4,10 +4,16 @@ namespace PHPMVC\Controllers;
 use PHPMVC\LIB\Messenger;
 use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
+use PHPMVC\Models\AuditAssignmentResultModel;
+use PHPMVC\Models\AuditModel;
+use PHPMVC\Models\ChequeModel;
 use PHPMVC\Models\ClientModel;
+use PHPMVC\Models\NotificationModel;
+use PHPMVC\Models\TransactionConditionModel;
 use PHPMVC\Models\TransactionModel;
 use PHPMVC\Models\TransactionStatusModel;
 use PHPMVC\Models\TransactionTypeModel;
+use PHPMVC\Models\UserModel;
 
 class TransactionsController extends AbstractController
 {
@@ -62,6 +68,9 @@ class TransactionsController extends AbstractController
             } else {
                 $this->messenger->add($this->language->get('message_save_failed'), Messenger::APP_MESSAGE_ERROR);
             }
+
+            $notificationUsers = UserModel::getUsersByType(7, $this->session->u->BranchId);
+            NotificationModel::sendNotification($notificationUsers, 'text_notification_1', serialize([$transaction->TransactionTitle]), '/transactions/view/' . $transaction->TransactionId);
 
             $this->redirect('/transactions');
         }
@@ -142,6 +151,10 @@ class TransactionsController extends AbstractController
             $this->redirect('/transactions');
         }
         $this->language->load('transactions.messages');
+        $transactionStatuses = TransactionStatusModel::getStatusesForTransaction($transaction);
+        foreach ($transactionStatuses as $transactionStatus) {
+            $transactionStatus->delete();
+        }
         if($transaction->delete()) {
             $this->messenger->add($this->language->get('message_delete_success'));
         } else {
@@ -170,5 +183,213 @@ class TransactionsController extends AbstractController
         $this->_data['statuses'] = TransactionStatusModel::getStatusesForTransaction($transaction);
 
         $this->_view();
+    }
+
+    public function auditAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+
+        $transaction = TransactionModel::getByPK($id);
+        if($transaction === false) {
+            $this->redirect('/audit/review');
+        }
+
+        $auditOrder = AuditModel::getBy(['TransactionId' => $transaction->TransactionId, 'UserId' => $this->session->u->UserId]);
+        if(false === $auditOrder) {
+            $this->redirect('/audit/review');
+        }
+        $auditOrder = $auditOrder->current();
+
+        $this->language->load('template.common');
+        $this->language->load('transactions.labels');
+        $this->language->load('transactions.audit');
+        $this->language->load('transactions.messages');
+
+        $this->_data['transaction'] = $transaction;
+        $this->_data['conditions'] = $transactionConditions = TransactionConditionModel::getBy(['TransactionTypeId' => $transaction->TransactionTypeId]);
+
+        $this->language->swapKey('title', [$transaction->TransactionTitle]);
+
+        $this->_data['previousConditions'] = $previousConditions = AuditAssignmentResultModel::getPreviousConditions($this->session->u, $transaction);
+
+        if(isset($_POST['submit']) &&
+            $this->requestHasValidToken()
+        ) {
+
+            if(empty($_POST['conditions'])) {
+                $this->redirect('/transactions/audit/' . $transaction->TransactionId);
+            }
+
+            if(!empty($previousConditions)) {
+                $conditions = null !== $_POST['conditions'] ? $this->filterStringArray($_POST['conditions']) : [];
+                $conditionsToAdd = array_values(array_diff($conditions, $previousConditions));
+                $conditionsToDelete = array_values(array_diff($previousConditions, $conditions));
+
+                if(!empty($conditionsToAdd)) {
+                    foreach ($conditionsToAdd as $condition) {
+                        $auditResult = new AuditAssignmentResultModel();
+                        $auditResult->UserId = $this->session->u->UserId;
+                        $auditResult->Created = date('Y-m-d');
+                        $auditResult->TransactionId = $transaction->TransactionId;
+                        $auditResult->AuditId = $auditOrder->AssignmentId;
+                        $auditResult->ConditionId = $condition;
+                        $auditResult->save();
+                    }
+                }
+
+                if(!empty($conditionsToDelete)) {
+                    foreach ($conditionsToDelete as $condition) {
+                        $auditResult = AuditAssignmentResultModel::getBy(
+                            [
+                                'TransactionId' => $transaction->TransactionId,
+                                'UserId'        => $this->session->u->UserId,
+                                'ConditionId'   => $condition
+                            ]
+                        );
+                        $auditResult->current()->delete();
+                    }
+                }
+            } else {
+                $conditions = $this->filterStringArray($_POST['conditions']);
+                if(false !== $conditions) {
+                    foreach ($conditions as $condition) {
+                        $auditResult = new AuditAssignmentResultModel();
+                        $auditResult->UserId = $this->session->u->UserId;
+                        $auditResult->Created = date('Y-m-d');
+                        $auditResult->TransactionId = $transaction->TransactionId;
+                        $auditResult->AuditId = $auditOrder->AssignmentId;
+                        $auditResult->ConditionId = $condition;
+                        $auditResult->save();
+                    }
+                }
+            }
+
+            if(AuditAssignmentResultModel::transactionIsSatisfied($transaction) !== false) {
+                $transaction->Audited = 1;
+                $status = new TransactionStatusModel();
+                $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_REVIEWED;
+                $status->UserId = $auditOrder->UserId;
+                $status->Created = date('Y-m-d H:i:s');
+                $status->TransactionId = $transaction->TransactionId;
+                $status->save();
+                $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+                NotificationModel::sendNotification($users, 'text_notification_4', serialize([$transaction->TransactionTitle, ($this->session->u->profile->FirstName . ' ' . $this->session->u->profile->LastName)]), '/transactions');
+            } else {
+                $transaction->Audited = 0;
+            }
+
+            if($transaction->save()) {
+                $this->messenger->add($this->language->get('message_audit_success'));
+            } else {
+                $this->messenger->add($this->language->get('message_audit_failed'), Messenger::APP_MESSAGE_ERROR);
+            }
+
+            if($transaction->Audited == 1) {
+                $this->redirect('/audit/reviewed');
+            } else {
+                $this->redirect('/audit/review');
+            }
+        }
+
+        $this->_view();
+    }
+
+    public function executiveConfirmAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+
+        $transaction = TransactionModel::getByPK($id);
+
+        if($transaction === false) {
+            $this->redirect('/transactions');
+        }
+
+        $status = new TransactionStatusModel();
+        $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW;
+        $status->UserId = $this->session->u->UserId;
+        $status->Created = date('Y-m-d H:i:s');
+        $status->TransactionId = $transaction->TransactionId;
+
+        $this->language->load('transactions.messages');
+
+        if($status->save()) {
+            $this->messenger->add($this->language->get('message_admin_audit_success'));
+        } else {
+            $this->messenger->add($this->language->get('message_admin_audit_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+
+        $this->redirect('/transactions');
+    }
+
+    public function chequeReadyAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+
+        $transaction = TransactionModel::getByPK($id);
+
+        if($transaction === false) {
+            $this->redirect('/transactions');
+        }
+
+        $this->language->load('template.common');
+        $this->language->load('transactions.labels');
+        $this->language->load('transactions.chequeready');
+        $this->language->load('transactions.messages');
+
+        $status = TransactionStatusModel::getTheLatestChequesStatues($transaction);
+
+        if(isset($_POST['submit']) &&
+            $this->requestHasValidToken()
+        ) {
+            if($status === false) {
+                $status = new TransactionStatusModel();
+                $status->StatusType = $this->filterInt($_POST['BankAccountState']);
+                $status->UserId = $this->session->u->UserId;
+                $status->Created = date('Y-m-d H:i:s');
+                $status->TransactionId = $transaction->TransactionId;
+            } else {
+                $status->StatusType = $this->filterInt($_POST['BankAccountState']);
+                $status->Created = date('Y-m-d H:i:s');
+            }
+
+            if($status->save()) {
+                $cheque = ChequeModel::getOneBy(['TransactionId' => $transaction->TransactionId]);
+                $cheque->Status = (int) $status->StatusType === TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_READY ? ChequeModel::CHEQUE_ORDER_READY_BALANCE_COVERED : ChequeModel::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED;
+                $cheque->save();
+                $this->messenger->add($this->language->get('message_cheque_success'));
+            } else {
+                $this->messenger->add($this->language->get('message_cheque_failed'), Messenger::APP_MESSAGE_ERROR);
+            }
+            $this->redirect('/transactions');
+        }
+
+        $this->_view();
+    }
+
+    public function closeAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+
+        $transaction = TransactionModel::getByPK($id);
+
+        if($transaction === false) {
+            $this->redirect('/transactions');
+        }
+
+        $status = new TransactionStatusModel();
+        $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CLOSED;
+        $status->UserId = $this->session->u->UserId;
+        $status->Created = date('Y-m-d H:i:s');
+        $status->TransactionId = $transaction->TransactionId;
+
+        $this->language->load('transactions.messages');
+
+        if($status->save()) {
+            $this->messenger->add($this->language->get('message_close_success'));
+        } else {
+            $this->messenger->add($this->language->get('message_close_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+
+        $this->redirect('/transactions');
     }
 }

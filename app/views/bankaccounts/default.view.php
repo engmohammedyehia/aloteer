@@ -12,14 +12,18 @@
         <tbody>
         <?php if(false !== $accounts): foreach ($accounts as $account): ?>
             <tr>
-                <td><?= ${'text_bank_' . $account->BankName} ?></td>
+                <td><?= $account->BankName ?></td>
                 <td><?= $account->BankAccountNumber ?></td>
                 <td><?= $account->BankAccountIBAN ?></td>
                 <td class="controls_td">
                     <a href="javascript:;" class="open_controls"><i class="fa fa-caret-square-o-left"></i></a>
                     <div class="controls_container">
+                    <?php if(array_key_exists('/bankaccounts/edit', $__privilegesKeys)): ?>
                         <a href="/bankaccounts/edit/<?= $account->AccountId ?>"><i class="fa fa-edit"></i> <?= $text_table_control_edit ?></a>
+                    <?php endif; ?>
+                    <?php if(array_key_exists('/bankaccounts/delete', $__privilegesKeys)): ?>
                         <a href="/bankaccounts/delete/<?= $account->AccountId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i> <?= $text_table_control_delete ?></a>
+                    <?php endif; ?>
                     </div>
                 </td>
             </tr>

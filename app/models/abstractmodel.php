@@ -131,6 +131,39 @@ class AbstractModel
         return static::get($sql, $options, $fetchType);
     }
 
+    public static function getColumn($sql, $column, $options = array())
+    {
+        $stmt = DatabaseHandler::factory()->prepare($sql);
+        if (!empty($options)) {
+            foreach ($options as $columnName => $type) {
+                if ($type[0] == 4) {
+                    $sanitizedValue = filter_var($type[1], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                    $stmt->bindValue(":{$columnName}", $sanitizedValue);
+                } elseif ($type[0] == 5) {
+                    if (!preg_match(self::VALIDATE_DATE_STRING, $type[1]) || !preg_match(self::VALIDATE_DATE_NUMERIC, $type[1])) {
+                        $stmt->bindValue(":{$columnName}", self::DEFAULT_MYSQL_DATE);
+                        continue;
+                    }
+                    $stmt->bindValue(":{$columnName}", $type[1]);
+                } else {
+                    $stmt->bindValue(":{$columnName}", $type[1], $type[0]);
+                }
+            }
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN, $column);
+    }
+
+    public static function getOneBy($columns, $options = array(), $fetchType = \PDO::FETCH_CLASS)
+    {
+        $results = static::getBy($columns, $options, $fetchType);
+        if(false == $results) {
+            return false;
+        } else {
+            return $results->current();
+        }
+    }
+
     public static function get($sql, $options = array(), $fetchType = \PDO::FETCH_CLASS)
     {
         $stmt = DatabaseHandler::factory()->prepare($sql);

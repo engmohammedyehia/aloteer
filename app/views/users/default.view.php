@@ -24,15 +24,25 @@
                 <td class="controls_td">
                     <a href="javascript:;" class="open_controls"><i class="fa fa-caret-square-o-left"></i></a>
                     <div class="controls_container">
-                        <a href="/users/edit/<?= $user->UserId ?>"><i class="fa fa-edit"></i> <?= $text_table_control_edit ?></a>
-                        <a href="/users/resetpassword/<?= $user->UserId ?>"><i class="fa fa-key"></i> <?= $text_table_control_reset ?></a>
-                        <?php if ($user->Status == 1): ?>
-                            <a href="/users/suspend/<?= $user->UserId ?>"><i class="fa fa-pause-circle-o"></i> <?= $text_table_control_suspend ?></a>
+                        <?php if(array_key_exists('/users/edit', $__privilegesKeys)): ?>
+                            <a href="/users/edit/<?= $user->UserId ?>"><i class="fa fa-edit"></i> <?= $text_table_control_edit ?></a>
                         <?php endif; ?>
-                        <?php if ($user->Status == 0): ?>
-                            <a href="/users/activate/<?= $user->UserId ?>"><i class="fa fa-play-circle-o"></i> <?= $text_table_control_activate ?></a>
+                        <?php if(array_key_exists('/users/resetpassword', $__privilegesKeys)): ?>
+                            <a href="/users/resetpassword/<?= $user->UserId ?>"><i class="fa fa-key"></i> <?= $text_table_control_reset ?></a>
                         <?php endif; ?>
-                        <a href="/users/delete/<?= $user->UserId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i>  <?= $text_table_control_delete ?></a>
+                        <?php if(array_key_exists('/users/suspend', $__privilegesKeys)): ?>
+                            <?php if ($user->Status == 1): ?>
+                                <a href="/users/suspend/<?= $user->UserId ?>"><i class="fa fa-pause-circle-o"></i> <?= $text_table_control_suspend ?></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if(array_key_exists('/users/activate', $__privilegesKeys)): ?>
+                            <?php if ($user->Status == 0): ?>
+                                <a href="/users/activate/<?= $user->UserId ?>"><i class="fa fa-play-circle-o"></i> <?= $text_table_control_activate ?></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if(array_key_exists('/users/delete', $__privilegesKeys)): ?>
+                            <a href="/users/delete/<?= $user->UserId ?>" onclick="if(!confirm('<?= $text_table_control_delete_confirm ?>')) return false;"><i class="fa fa-trash"></i>  <?= $text_table_control_delete ?></a>
+                        <?php endif; ?>
                     </div>
                 </td>
             </tr>

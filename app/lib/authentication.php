@@ -16,7 +16,20 @@ class Authentication
         '/language/default',
         '/accessdenied/default',
         '/notfound/notfound',
-        '/test/default'
+        '/test/default',
+        '/mail/default',
+        '/mail/sent',
+        '/mail/new',
+        '/mail/view',
+        '/mail/forward',
+        '/mail/reply',
+        '/mail/delete',
+        '/notifications',
+        '/notifications/default',
+        '/notifications/truncate',
+        '/notifications/readall',
+        '/notifications/view',
+        '/notifications/delete'
     ];
 
     private function __construct($session)

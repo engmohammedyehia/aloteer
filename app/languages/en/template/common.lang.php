@@ -17,6 +17,7 @@ $_['text_transactions_conditions'] = 'Transactions Conditions';
 $_['text_transactions'] = 'Transactions';
 $_['text_transactions_show'] = 'Transactions List';
 $_['text_transactions_add'] = 'Create a new transaction';
+$_['text_transactions_review'] = 'قائمة معاملات للمراجعة';
 $_['text_transactions_reports'] = 'Transactions Reports';
 $_['text_cheques'] = 'Cheques';
 $_['text_cheques_show'] = 'Issues cheques list';

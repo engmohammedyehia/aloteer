@@ -8,7 +8,7 @@ trait TemplateHelper
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         if(is_array($urls) && !empty($urls)) {
             foreach ($urls as $url) {
-                if((bool) preg_match("/" . preg_quote($url, '/'). "$/i", $path) === true) {
+                if((bool) preg_match("/" . preg_quote($url, '/'). "/i", $path) === true) {
                     return true;
                 }
             }
