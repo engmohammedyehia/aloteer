@@ -218,7 +218,18 @@ class UsersController extends AbstractController
                 }
             }
 
-            if(!$uploader->hasError && $profile->save() && $user->save()) {
+            if(!empty($_FILES['Signature']['name'])) {
+                $uploader2 = new FileUpload($_FILES['Signature']);
+                try {
+                    $uploader2->remove($profile->Signature);
+                    $uploader2->upload();
+                    $profile->Signature = $uploader2->getFileName();
+                } catch (\Exception $e) {
+                    $this->messenger->add($e->getMessage(), Messenger::APP_MESSAGE_ERROR);
+                }
+            }
+
+            if(!$uploader->hasError && !$uploader2->hasError && $profile->save() && $user->save()) {
                 $user->profile = $profile;
                 $this->session->u = $user;
                 $this->messenger->add($this->language->get('message_profile_saved_success'));

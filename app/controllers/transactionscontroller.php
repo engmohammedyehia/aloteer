@@ -9,7 +9,9 @@ use PHPMVC\Models\AuditModel;
 use PHPMVC\Models\ChequeModel;
 use PHPMVC\Models\ClientModel;
 use PHPMVC\Models\NotificationModel;
+use PHPMVC\Models\SignatureRequestModel;
 use PHPMVC\Models\TransactionConditionModel;
+use PHPMVC\Models\TransactionDeletedModel;
 use PHPMVC\Models\TransactionModel;
 use PHPMVC\Models\TransactionStatusModel;
 use PHPMVC\Models\TransactionTypeModel;
@@ -34,6 +36,18 @@ class TransactionsController extends AbstractController
         $this->language->load('transactions.status');
 
         $this->_data['transactions'] = TransactionModel::getAll();
+
+        $this->_view();
+    }
+
+    public function canceledAction()
+    {
+        $this->language->load('template.common');
+        $this->language->load('transactions.default');
+        $this->language->load('transactions.status');
+        $this->language->load('transactions.canceled');
+
+        $this->_data['transactions'] = TransactionDeletedModel::getAll();
 
         $this->_view();
     }
@@ -124,7 +138,7 @@ class TransactionsController extends AbstractController
     {
         $id = $this->filterInt($this->_params[0]);
 
-        $transaction = TransactionModel::getByPK($id);
+        $transaction = isset($_GET['d']) && $_GET['d'] === 'true' ? TransactionDeletedModel::getByPK($id) : TransactionModel::getByPK($id);
         if($transaction === false) {
             $this->redirect('/transactions');
         }
@@ -151,10 +165,7 @@ class TransactionsController extends AbstractController
             $this->redirect('/transactions');
         }
         $this->language->load('transactions.messages');
-        $transactionStatuses = TransactionStatusModel::getStatusesForTransaction($transaction);
-        foreach ($transactionStatuses as $transactionStatus) {
-            $transactionStatus->delete();
-        }
+
         if($transaction->delete()) {
             $this->messenger->add($this->language->get('message_delete_success'));
         } else {
@@ -391,5 +402,38 @@ class TransactionsController extends AbstractController
         }
 
         $this->redirect('/transactions');
+    }
+
+    public function coverAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+
+        $transaction = TransactionModel::getByPK($id);
+        if($transaction === false) {
+            $this->redirect('/transactions');
+        }
+
+        $signatureRequests = SignatureRequestModel::getSignaturesForTransaction($transaction);
+
+        $this->language->load('template.common');
+        $this->language->load('transactions.labels');
+        $this->language->load('transactions.cover');
+
+        $this->_data['signatureRequest'] = $signatureRequests;
+        $this->_data['transaction'] = $transaction;
+
+        $this->language->swapKey('title', [$transaction->TransactionTitle]);
+
+        $this->_template->swapFooterResources(
+            [
+                'jquery'                => JS . 'vendor/jquery-1.12.0.min.js',
+                'helper'                => JS . 'helper.js',
+                'selectivity'           => JS . 'selectivity.js',
+                'auth'                  => JS . 'auth.js',
+                'main'                  => JS . 'main.js'
+            ]
+        );
+
+        $this->_view();
     }
 }

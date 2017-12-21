@@ -1,4 +1,3 @@
-<?= isset($disabled) ? '<p style="padding: 8px;background: #900; color: #FFF;text-align: center">' . $disabled . '</p>' : '' ?>
 <div class="action_view login">
     <?php $messages = $this->messenger->getMessages(); if(!empty($messages)): foreach ($messages as $message): ?>
         <p class="message t<?= $message[1] ?>"><?= $message[0] ?><a href="" class="closeBtn"><i class="fa fa-times"></i></a></p>
@@ -24,10 +23,20 @@
             <p id="loaderText"></p>
         </div>
     </div>
-    <div class="intro animate">
+    <div class="intro animate" <?= (isset($disabled)) ? 'style="background:#900;"' : '' ?>>
         <h3><?= $text_welcome ?></h3>
         <h1><?= $text_intro_title ?></h1>
-        <img src="/img/logo.png" alt="<?= $text_intro_title ?>">
-        <p><?= $text_intro ?></p>
+        <?php if (isset($disabled)) { ?>
+            <div style="width:100px;height:100px;margin:80px auto;">
+                <i style="font-size: 6em;color:#fff" class="fa fa-exclamation-triangle"></i>
+            </div>
+        <?php } else { ?>
+            <img src="/img/logo.png" alt="<?= $text_intro_title ?>">
+        <?php } ?>
+        <?php if (isset($disabled)) { ?>
+            <p><span><?= date('Y-m-d') ?></span><?= $disabled ?></p>
+        <?php } else { ?>
+            <p><span><?= $text_intro ?></p>
+        <?php } ?>
     </div>
 </div>

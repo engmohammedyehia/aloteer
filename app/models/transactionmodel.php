@@ -43,7 +43,8 @@ class TransactionModel extends AbstractModel
                   (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
                   (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
                   (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
-                  (SELECT 1 FROM ' . ChequeModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) ChequeOrdered
+                  (SELECT 1 FROM ' . ChequeModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) ChequeOrdered,
+                  (SELECT 1 FROM ' . SignatureRequestModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) SignatureRequest
                   FROM ' . self::$tableName . ' t1' .
             ' INNER JOIN ' . TransactionTypeModel::getModelTableName() . ' t2 ON t2.TransactionTypeId = t1.TransactionTypeId' .
             ' INNER JOIN ' . ClientModel::getModelTableName() . ' t3 ON t3.id = t1.ClientId' .

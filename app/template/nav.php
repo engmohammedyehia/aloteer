@@ -53,10 +53,12 @@
                 <?php if(array_key_exists('/transactions/create', $__privilegesKeys)): ?>
                 <li><a class="<?= $this->matchUrl('/transactions/create') === true ? ' selected' : '' ?>" href="/transactions/create"><?= $text_transactions_add ?></a></li>
                 <?php endif; ?>
+                <?php if(array_key_exists('/transactions/canceled', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/transactions/canceled') === true ? ' selected' : '' ?>" href="/transactions/canceled"><?= $text_transactions_canceled ?></a></li>
+                <?php endif; ?>
                 <?php if(array_key_exists('/reports/transactions', $__privilegesKeys)): ?>
                 <li><a class="<?= $this->matchUrl('/reports/transactions') === true ? ' selected' : '' ?>" href="/reports/transactions"><?= $text_transactions_reports ?></a></li>
                 <?php endif; ?>
-
             </ul>
         </li>
         <?php endif; ?>
@@ -79,7 +81,7 @@
         <?php endif; ?>
 
         <?php if((bool) preg_match('/cheques/', $__privileges)): ?>
-        <li class="submenu<?= $this->matchUrl(['/cheques/default', '/cheques/printing', '/cheques/printed', '/cheques/handedover', '/cheques/edit', '/cheques/view']) === true ? ' selected' : '' ?>">
+        <li class="submenu<?= $this->matchUrl(['/cheques/default', '/cheques/printing', '/cheques/printed', '/cheques/handedover', '/cheques/edit', '/cheques/view', '/cheques/cleared', '/cheques/canceled', '/cheques/obsoleted']) === true ? ' selected' : '' ?>">
             <a href="javascript:;"><i class="fa fa-vcard"></i> <?= $text_cheques ?></a>
             <ul>
                 <?php if(array_key_exists('/cheques/default', $__privilegesKeys)): ?>
@@ -94,8 +96,21 @@
                 <?php if(array_key_exists('/cheques/handedover', $__privilegesKeys)): ?>
                 <li><a class="<?= $this->matchUrl('/cheques/handedover') === true ? ' selected' : '' ?>" href="/cheques/handedover"><?= $text_cheques_handed_over ?></a></li>
                 <?php endif; ?>
+                <?php if(array_key_exists('/cheques/cleared', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/cheques/cleared') === true ? ' selected' : '' ?>" href="/cheques/cleared"><?= $text_cheques_cleared ?></a></li>
+                <?php endif; ?>
+                <?php if(array_key_exists('/cheques/canceled', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/cheques/canceled') === true ? ' selected' : '' ?>" href="/cheques/canceled"><?= $text_cheques_canceled ?></a></li>
+                <?php endif; ?>
+                <?php if(array_key_exists('/cheques/obsoleted', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/cheques/obsoleted') === true ? ' selected' : '' ?>" href="/cheques/obsoleted"><?= $text_cheques_obsoleted ?></a></li>
+                <?php endif; ?>
             </ul>
         </li>
+        <?php endif; ?>
+
+        <?php if((bool) preg_match('/signaturerequest/', $__privileges)): ?>
+        <li class="<?= $this->matchUrl(['/signaturerequest','/signaturerequest/default']) === true ? ' selected' : '' ?>"><a href="/signaturerequest"><i class="fa fa-pencil"></i> <?= $text_signature_requests ?></a></li>
         <?php endif; ?>
 
         <?php if((bool) preg_match('/branches/', $__privileges)): ?>

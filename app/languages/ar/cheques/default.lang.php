@@ -17,3 +17,7 @@ $_['text_table_control_print'] = 'ارسال الشيك للطباعة';
 $_['text_table_control_printed'] = 'طباعة الشيك';
 $_['text_table_control_handover'] = 'تسليم الشيك للعميل';
 $_['text_table_control_hand_over_confirm'] = 'هل تود تاكيد تسليم الشيك؟';
+$_['text_table_control_clear'] = 'تم صرف الشيك من البنك';
+$_['text_table_control_clear_confirm'] = 'هل تود تاكيد صرف الشيك من البنك؟';
+$_['text_table_control_cancel'] = 'إلغاء الشيك';
+$_['text_table_control_cancel_confirm'] = 'هل تود تاكيد الغاء الشيك؟';

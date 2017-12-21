@@ -16,6 +16,7 @@ $_['text_label_PhoneNumber'] = 'رقم الهاتف';
 $_['text_label_DOB'] = 'تاريخ الميلاد';
 $_['text_label_Address'] = 'العنوان';
 $_['text_label_Image'] = 'صورة شخصية مقاس ١٠٠ في ١٠٠ بكسل';
+$_['text_label_Signature'] = 'صورة التوقيع الشخصي مقاس ٢٠٠ في ١٠٠ بكسل';
 $_['text_user_GroupId'] = 'مجموعات المستخدمين';
 $_['text_user_BranchId'] = 'الفرع التابع له المستخدم';
 $_['text_label_save'] = 'حفظ';

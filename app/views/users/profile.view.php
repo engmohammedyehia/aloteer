@@ -17,17 +17,26 @@
             <label><?= $text_label_DOB ?></label>
             <input type="date" name="DOB" value="<?= $this->showValue('DOB', $profile) ?>">
         </div>
-        <div class="input_wrapper n50 border">
+        <div class="input_wrapper n40 border">
             <label<?= $this->labelFloat('Address', $profile) ?>><?= $text_label_Address ?></label>
             <input type="text" name="Address" value="<?= $this->showValue('Address', $profile) ?>">
         </div>
-        <div class="input_wrapper_other n50 padding">
+        <div class="input_wrapper_other n30 padding border">
             <label><?= $text_label_Image ?></label>
             <input type="file" accept="image/*" name="Image" id="Image" value="<?= $this->showValue('Image') ?>">
+        </div>
+        <div class="input_wrapper_other n30 padding">
+            <label><?= $text_label_Signature ?></label>
+            <input type="file" accept="image/*" name="Signature" id="Signature" value="<?= $this->showValue('Signature') ?>">
         </div>
         <?php if ($profile->Image !== null): ?>
             <div class="input_wrapper_other n100">
                 <img src="/uploads/images/<?= $profile->Image ?>" width="100" height="100">
+            </div>
+        <?php endif; ?>
+        <?php if ($profile->Signature !== null): ?>
+            <div class="input_wrapper_other n100">
+                <img src="/uploads/images/<?= $profile->Signature ?>">
             </div>
         <?php endif; ?>
         <input type="hidden" name="token" value="<?= $this->_registry->session->CSRFToken ?>">

@@ -22,8 +22,9 @@ class TransactionStatusModel extends AbstractModel
     const STATUS_TRANSACTION_CHEQUE_READY = 9;
     const STATUS_TRANSACTION_CHEQUE_READY_NO_COVERAGE = 10;
     const STATUS_TRANSACTION_CHEQUE_HANDED_TO_CLIENT = 11;
-    const STATUS_TRANSACTION_SUSPENDED = 12;
-    const STATUS_TRANSACTION_CLOSED = 13;
+    const STATUS_TRANSACTION_CHEQUE_CLEARED = 12;
+    const STATUS_TRANSACTION_SUSPENDED = 13;
+    const STATUS_TRANSACTION_CLOSED = 14;
 
     public static $tableName = 'app_transactions_statuses';
     
@@ -73,5 +74,10 @@ class TransactionStatusModel extends AbstractModel
     public static function exportTransactionUsers (TransactionModel $transaction, UserModel $user)
     {
         return self::get('SELECT UserId FROM ' . self::$tableName . ' WHERE TransactionId = ' . $transaction->TransactionId . ' AND UserId != ' . $user->UserId . ' GROUP BY UserId');
+    }
+
+    public static function exportTransactionUsersAll (TransactionModel $transaction)
+    {
+        return self::get('SELECT UserId FROM ' . self::$tableName . ' WHERE TransactionId = ' . $transaction->TransactionId . ' GROUP BY UserId');
     }
 }

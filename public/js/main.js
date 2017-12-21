@@ -1,15 +1,17 @@
-$('table.data').DataTable(
-    {
-        "aaSorting": [],
-        "stateSave": true,
-        "columnDefs": [
-            {
-                "targets": [$(this).find('thead').find('tr').children('th').length - 1],
-                "orderable": false
-            }
-        ],
-    }
-);
+if(typeof $('table.data').DataTable === 'function') {
+    $('table.data').DataTable(
+        {
+            "aaSorting": [],
+            "stateSave": true,
+            "columnDefs": [
+                {
+                    "targets": [$(this).find('thead').find('tr').children('th').length - 1],
+                    "orderable": false
+                }
+            ],
+        }
+    );
+}
 
 $('a.menu_switch').click(function(evt)
 {

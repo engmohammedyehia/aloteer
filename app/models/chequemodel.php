@@ -27,6 +27,7 @@ class ChequeModel extends AbstractModel
     const CHEQUE_ORDER_READY_BALANCE_COVERED        = 4;
     const CHEQUE_ORDER_READY_BALANCE_NOT_COVERED    = 5;
     const CHEQUE_ORDER_HANDED_TO_CLIENT             = 6;
+    const CHEQUE_ORDER_CLEARED                      = 7;
 
     protected static $tableSchema = array(
         'TransactionId'             => self::DATA_TYPE_INT,
@@ -94,6 +95,32 @@ class ChequeModel extends AbstractModel
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
                   WHERE t1.Status = ' . self::CHEQUE_ORDER_HANDED_TO_CLIENT
+
+        );
+    }
+
+    public static function getClearedCheques()
+    {
+        return self::get(
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName
+                  FROM ' . self::$tableName . ' t1
+                  INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
+                  INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
+                  INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  WHERE t1.Status = ' . self::CHEQUE_ORDER_CLEARED
+
+        );
+    }
+
+    public static function getObsoletedCheques()
+    {
+        return self::get(
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName
+                  FROM ' . self::$tableName . ' t1
+                  INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
+                  INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
+                  INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  WHERE t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED . ' AND (MONTH(CURRENT_DATE) - MONTH(t1.Created)) >= 6'
 
         );
     }

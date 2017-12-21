@@ -82,9 +82,15 @@
                         <?php endif; ?>
 
                         <?php if(array_key_exists('/transactions/cover', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && ((int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTED || (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW)): ?>
+                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && (int) $transaction->SignatureRequest === 1): ?>
                             <a href="/transactions/cover/<?= $transaction->TransactionId ?>"><i class="fa fa-file"></i> <?= $text_table_control_cover ?></a>
                         <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if(array_key_exists('/signaturerequest/create', $__privilegesKeys)): ?>
+                            <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && ((int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTED || (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW) && $transaction->SignatureRequest === null): ?>
+                                <a href="/signaturerequest/create/<?= $transaction->TransactionId ?>"><i class="fa fa-pencil"></i> <?= $text_table_control_signature_request ?></a>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if(array_key_exists('/transactions/chequeready', $__privilegesKeys)): ?>
@@ -94,7 +100,7 @@
                         <?php endif; ?>
 
                         <?php if(array_key_exists('/transactions/close', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_HANDED_TO_CLIENT): ?>
+                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_CLEARED): ?>
                             <a href="/transactions/close/<?= $transaction->TransactionId ?>" onclick="if(!confirm('<?= $text_table_control_close_confirm ?>')) return false;"><i class="fa fa-lock"></i> <?= $text_table_control_close ?></a>
                         <?php endif; ?>
                         <?php endif; ?>

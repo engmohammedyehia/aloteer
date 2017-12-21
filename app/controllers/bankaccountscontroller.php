@@ -4,6 +4,7 @@ use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
 use PHPMVC\lib\Messenger;
 use PHPMVC\Models\BankAccountModel;
+use PHPMVC\Models\BranchModel;
 
 class BankAccountsController extends AbstractController
 {
@@ -13,7 +14,6 @@ class BankAccountsController extends AbstractController
     private $_createActionRoles =
     [
         'BankName'              => 'req|alpha|between(5,30)',
-        'BankAccountNumber'     => 'req|num|max(20)|lang(en)',
         'BankAccountIBAN'       => 'req|alphanum|max(30)|lang(en)'
     ];
 
@@ -37,14 +37,21 @@ class BankAccountsController extends AbstractController
         $this->language->load('bankaccounts.messages');
         $this->language->load('validation.errors');
 
+        $this->_data['branches'] = BranchModel::getAll();
+
         if(isset($_POST['submit']) &&
             $this->isValid($this->_createActionRoles, $_POST) &&
             $this->requestHasValidToken()
         ) {
+
             $account = new BankAccountModel();
+
             $account->BankName = $this->filterString($_POST['BankName']);
-            $account->BankAccountNumber = $this->filterString($_POST['BankAccountNumber']);
+            $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
+            $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
+            $account->BranchId = $this->filterInt($_POST['BranchId']);
+
             if($account->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/bankaccounts');
@@ -75,13 +82,19 @@ class BankAccountsController extends AbstractController
         $this->language->load('bankaccounts.messages');
         $this->language->load('validation.errors');
 
+        $this->_data['branches'] = BranchModel::getAll();
+
         if(isset($_POST['submit']) &&
             $this->isValid($this->_createActionRoles, $_POST) &&
             $this->requestHasValidToken()
         ) {
+
             $account->BankName = $this->filterString($_POST['BankName']);
-            $account->BankAccountNumber = $this->filterString($_POST['BankAccountNumber']);
+            $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
+            $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
+            $account->BranchId = $this->filterInt($_POST['BranchId']);
+
             if($account->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/bankaccounts');

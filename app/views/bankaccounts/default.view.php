@@ -4,8 +4,10 @@
         <thead>
             <tr>
                 <th><?= $text_table_bank_name ?></th>
-                <th><?= $text_table_bank_account_number ?></th>
+                <th><?= $text_table_bank_account_owner ?></th>
+                <th><?= $text_table_bank_account_usage ?></th>
                 <th><?= $text_table_bank_account_iban ?></th>
+                <th><?= $text_table_bank_account_branch ?></th>
                 <th><?= $text_table_control ?></th>
             </tr>
         </thead>
@@ -13,8 +15,10 @@
         <?php if(false !== $accounts): foreach ($accounts as $account): ?>
             <tr>
                 <td><?= $account->BankName ?></td>
-                <td><?= $account->BankAccountNumber ?></td>
+                <td><?= $account->BankAccountOwner ?></td>
+                <td><?= $account->BankAccountUsage ?></td>
                 <td><?= $account->BankAccountIBAN ?></td>
+                <td><?= $account->BranchName ?></td>
                 <td class="controls_td">
                     <a href="javascript:;" class="open_controls"><i class="fa fa-caret-square-o-left"></i></a>
                     <div class="controls_container">

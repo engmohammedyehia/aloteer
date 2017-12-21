@@ -35,8 +35,8 @@ class PrivilegesController extends AbstractController
 
         if(isset($_POST['submit'])) {
             $privilege = new PrivilegeModel();
-            $privilege->PrivilegeTitle = $this->filterString($_POST['PrivilegeTitle']);
-            $privilege->Privilege = $this->filterString($_POST['Privilege']);
+            $privilege->PrivilegeTitle = trim($this->filterString($_POST['PrivilegeTitle']));
+            $privilege->Privilege = trim($this->filterString($_POST['Privilege']));
             if($privilege->save())
             {
                 $this->messenger->add('تم حفظ الصلاحية بنجاح');

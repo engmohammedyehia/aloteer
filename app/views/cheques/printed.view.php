@@ -29,6 +29,9 @@
                             <?php if(array_key_exists('/cheques/handover', $__privilegesKeys)): ?>
                                 <a href="/cheques/handover/<?= $order->ChequeId ?>" onclick="if(!confirm('<?= $text_table_control_hand_over_confirm ?>')) return false;"><i class="fa fa-handshake-o"></i> <?= $text_table_control_handover ?></a>
                             <?php endif; ?>
+                            <?php if(array_key_exists('/cheques/cancel', $__privilegesKeys)): ?>
+                                <a href="/cheques/cancel/<?= $order->ChequeId ?>" onclick="if(!confirm('<?= $text_table_control_cancel_confirm ?>')) return false;"><i class="fa fa-times"></i> <?= $text_table_control_cancel ?></a>
+                            <?php endif; ?>
                         </div>
                     <?php } elseif((int) $order->Status === \PHPMVC\Models\ChequeModel::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED) { ?>
                     <?= $this->language->get('text_status_10') ?>

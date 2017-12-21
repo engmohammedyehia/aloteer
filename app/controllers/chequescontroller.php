@@ -8,6 +8,7 @@ use PHPMVC\Models\AuditAssignmentResultModel;
 use PHPMVC\Models\AuditModel;
 use PHPMVC\Models\BankAccountModel;
 use PHPMVC\Models\BranchModel;
+use PHPMVC\Models\ChequeDeletedModel;
 use PHPMVC\Models\ChequeModel;
 use PHPMVC\Models\ClientModel;
 use PHPMVC\Models\TransactionConditionModel;
@@ -55,6 +56,42 @@ class ChequesController extends AbstractController
         $this->language->load('transactions.status');
 
         $this->_data['orders'] = ChequeModel::getPrintedCheques();
+
+        $this->_view();
+    }
+
+    public function clearedAction()
+    {
+        $this->language->load('template.common');
+        $this->language->load('cheques.default');
+        $this->language->load('cheques.cleared');
+        $this->language->load('transactions.status');
+
+        $this->_data['orders'] = ChequeModel::getClearedCheques();
+
+        $this->_view();
+    }
+
+    public function canceledAction()
+    {
+        $this->language->load('template.common');
+        $this->language->load('cheques.default');
+        $this->language->load('cheques.canceled');
+        $this->language->load('transactions.status');
+
+        $this->_data['orders'] = ChequeDeletedModel::getCanceledCheques();
+
+        $this->_view();
+    }
+
+    public function obsoletedAction()
+    {
+        $this->language->load('template.common');
+        $this->language->load('cheques.default');
+        $this->language->load('cheques.canceled');
+        $this->language->load('transactions.status');
+
+        $this->_data['orders'] = ChequeModel::getObsoletedCheques();
 
         $this->_view();
     }
@@ -348,5 +385,69 @@ class ChequesController extends AbstractController
         }
 
         $this->redirect('/cheques/handedover');
+    }
+
+    public function clearAction()
+    {
+        $chequeId = (int) $this->filterInt(@$this->_params[0]);
+        $cheque = ChequeModel::getByPK($chequeId);
+
+        if($cheque === false) {
+            $this->redirect('/cheques/default');
+        }
+
+        $cheque->Status = ChequeModel::CHEQUE_ORDER_CLEARED;
+
+        $this->language->load('cheques.messages');
+
+        if($cheque->save()) {
+
+            $status = new TransactionStatusModel();
+            $status->UserId = $this->session->u->UserId;
+            $status->TransactionId = $cheque->TransactionId;
+            $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_CLEARED;
+            $status->Created = date('Y-m-d H:i:s');
+            $status->save();
+
+            $this->messenger->add($this->language->get('message_clear_success'));
+            $this->redirect('/cheques/cleared');
+        } else {
+            $this->messenger->add($this->language->get('message_clear_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+    }
+
+    public function cancelAction()
+    {
+        $chequeId = (int) $this->filterInt(@$this->_params[0]);
+        $cheque = ChequeModel::getByPK($chequeId);
+
+        if($cheque === false) {
+            $this->redirect('/cheques/default');
+        }
+
+        $this->language->load('cheques.messages');
+
+        if($cheque->delete()) {
+
+            $deletedCheuqe = new ChequeDeletedModel();
+            $deletedCheuqe->TransactionId = $cheque->TransactionId;
+            $deletedCheuqe->ClientId = $cheque->ClientId;
+            $deletedCheuqe->AccountId = $cheque->AccountId;
+            $deletedCheuqe->Amount = $cheque->Amount;
+            $deletedCheuqe->AmountLiteral = $cheque->AmountLiteral;
+            $deletedCheuqe->Status = $cheque->Status;
+            $deletedCheuqe->Created = date('Y-m-d H:i:s');
+            $deletedCheuqe->UserId = $cheque->UserId;
+            $deletedCheuqe->ClientName = $cheque->ClientName;
+            $deletedCheuqe->Reason = $cheque->Reason;
+            $deletedCheuqe->ChequeNumber = $cheque->ChequeNumber;
+            $deletedCheuqe->BranchId = $cheque->BranchId;
+            $deletedCheuqe->save();
+
+            $this->messenger->add($this->language->get('message_cancel_success'));
+            $this->redirect('/cheques/printed');
+        } else {
+            $this->messenger->add($this->language->get('message_cancel_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
     }
 }

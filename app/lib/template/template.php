@@ -36,6 +36,11 @@ class Template
         $this->_templateParts['template'] = $template;
     }
 
+    public function swapFooterResources($resources)
+    {
+        $this->_templateParts['footer_resources'] = $resources;
+    }
+
     public function setRegistry($registry)
     {
         $this->_registry = $registry;

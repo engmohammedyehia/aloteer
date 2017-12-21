@@ -9,6 +9,7 @@ class UserProfileModel extends AbstractModel
     public $Address;
     public $DOB;
     public $Image;
+    public $Signature;
 
     protected static $tableName = 'app_users_profiles';
 
@@ -18,7 +19,8 @@ class UserProfileModel extends AbstractModel
         'LastName'          => self::DATA_TYPE_STR,
         'Address'           => self::DATA_TYPE_STR,
         'DOB'               => self::DATA_TYPE_DATE,
-        'Image'             => self::DATA_TYPE_STR
+        'Image'             => self::DATA_TYPE_STR,
+        'Signature'         => self::DATA_TYPE_STR
     );
 
     protected static $primaryKey = 'UserId';
