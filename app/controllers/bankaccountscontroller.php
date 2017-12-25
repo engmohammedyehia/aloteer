@@ -4,6 +4,7 @@ use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
 use PHPMVC\lib\Messenger;
 use PHPMVC\Models\BankAccountModel;
+use PHPMVC\Models\BankBranchModel;
 use PHPMVC\Models\BranchModel;
 
 class BankAccountsController extends AbstractController
@@ -37,7 +38,7 @@ class BankAccountsController extends AbstractController
         $this->language->load('bankaccounts.messages');
         $this->language->load('validation.errors');
 
-        $this->_data['branches'] = BranchModel::getAll();
+        $this->_data['branches'] = BankBranchModel::getAll();
 
         if(isset($_POST['submit']) &&
             $this->isValid($this->_createActionRoles, $_POST) &&
@@ -50,7 +51,7 @@ class BankAccountsController extends AbstractController
             $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
             $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
-            $account->BranchId = $this->filterInt($_POST['BranchId']);
+            $account->BankBranchId = $this->filterInt($_POST['BankBranchId']);
 
             if($account->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
@@ -82,7 +83,7 @@ class BankAccountsController extends AbstractController
         $this->language->load('bankaccounts.messages');
         $this->language->load('validation.errors');
 
-        $this->_data['branches'] = BranchModel::getAll();
+        $this->_data['branches'] = BankBranchModel::getAll();
 
         if(isset($_POST['submit']) &&
             $this->isValid($this->_createActionRoles, $_POST) &&
@@ -93,7 +94,7 @@ class BankAccountsController extends AbstractController
             $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
             $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
-            $account->BranchId = $this->filterInt($_POST['BranchId']);
+            $account->BankBranchId = $this->filterInt($_POST['BankBranchId']);
 
             if($account->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));

@@ -6,6 +6,7 @@ use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
 use PHPMVC\Models\AuditAssignmentResultModel;
 use PHPMVC\Models\AuditModel;
+use PHPMVC\Models\AuditRouteModel;
 use PHPMVC\Models\ChequeModel;
 use PHPMVC\Models\ClientModel;
 use PHPMVC\Models\NotificationModel;
@@ -35,7 +36,16 @@ class TransactionsController extends AbstractController
         $this->language->load('transactions.default');
         $this->language->load('transactions.status');
 
-        $this->_data['transactions'] = TransactionModel::getAll();
+        // Auditor
+        if((int) $this->session->u->GroupId === 6) {
+            $this->_data['transactions'] = TransactionModel::getAllForAuditors($this->session->u->BranchId);
+        // Branch Manager
+        } elseif ((int) $this->session->u->GroupId === 7) {
+            $this->_data['transactions'] = TransactionModel::getAll($this->session->u->BranchId);
+        // Finance Manager or CEO or Vice Presiendet
+        } else {
+            $this->_data['transactions'] = TransactionModel::getAll();
+        }
 
         $this->_view();
     }
@@ -83,8 +93,32 @@ class TransactionsController extends AbstractController
                 $this->messenger->add($this->language->get('message_save_failed'), Messenger::APP_MESSAGE_ERROR);
             }
 
+            $autoAuditRoute = AuditRouteModel::getBy(['BranchId' => $transaction->BranchId]);
+            if(false !== $autoAuditRoute) {
+                $autoAuditRoute = $autoAuditRoute->current();
+                if((int) $autoAuditRoute->Enabled === 1) {
+                    $audit = new AuditModel();
+                    $audit->UserId = $autoAuditRoute->UserId;
+                    $audit->TransactionId = $transaction->TransactionId;
+                    $audit->AssignedBy = $this->session->u->UserId;
+                    $audit->Created = date('Y-m-d H:i:s');
+                    $audit->save();
+
+                    $status = new TransactionStatusModel();
+                    $status->UserId = $audit->UserId;
+                    $status->TransactionId = $transaction->TransactionId;
+                    $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_UNDER_REVIEW;
+                    $status->Created = date('Y-m-d H:i:s');
+                    $status->save();
+
+                    NotificationModel::sendNotification([$audit], 'text_notification_3', serialize([$transaction->TransactionTitle]), '/transactions/audit/' . $transaction->TransactionId);
+                }
+            }
+
             $notificationUsers = UserModel::getUsersByType(7, $this->session->u->BranchId);
+            $notificationUsers2 = UserModel::getUsersByType(8, $this->session->u->BranchId);
             NotificationModel::sendNotification($notificationUsers, 'text_notification_1', serialize([$transaction->TransactionTitle]), '/transactions/view/' . $transaction->TransactionId);
+            NotificationModel::sendNotification($notificationUsers2, 'text_notification_1', serialize([$transaction->TransactionTitle]), '/transactions/view/' . $transaction->TransactionId);
 
             $this->redirect('/transactions');
         }

@@ -9,7 +9,7 @@ class BankAccountModel extends AbstractModel
     public $BankAccountIBAN;
     public $BankAccountOwner;
     public $BankAccountUsage;
-    public $BranchId;
+    public $BankBranchId;
 
     public static $tableName = 'app_bank_accounts';
 
@@ -18,7 +18,7 @@ class BankAccountModel extends AbstractModel
         'BankAccountIBAN'           => self::DATA_TYPE_STR,
         'BankAccountOwner'          => self::DATA_TYPE_STR,
         'BankAccountUsage'          => self::DATA_TYPE_STR,
-        'BranchId'                  => self::DATA_TYPE_INT
+        'BankBranchId'              => self::DATA_TYPE_INT
     );
 
     protected static $primaryKey = 'AccountId';
@@ -26,9 +26,9 @@ class BankAccountModel extends AbstractModel
     public static function getAll()
     {
         return self::get('
-            SELECT t1.*, t2.BranchName FROM ' . self::$tableName . ' t1
-            INNER JOIN ' . BranchModel::getModelTableName() . ' t2 ON 
-            t2.BranchId = t1.BranchId 
+            SELECT t1.*, t2.BankBranchName BranchName FROM ' . self::$tableName . ' t1
+            INNER JOIN ' . BankBranchModel::getModelTableName() . ' t2 ON 
+            t2.BankBranchId = t1.BankBranchId 
         ');
     }
 }

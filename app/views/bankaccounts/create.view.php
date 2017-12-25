@@ -18,10 +18,10 @@
             <input required data-language="en" type="text" name="BankAccountIBAN" id="BankAccountIBAN" value="<?= $this->showValue('BankAccountIBAN') ?>" maxlength="30">
         </div>
         <div class="input_wrapper_other padding n30 select">
-            <select required name="BranchId">
+            <select required name="BankBranchId">
                 <option value=""><?= $text_user_BranchId ?></option>
                 <?php if (false !== $branches): foreach ($branches as $branch): ?>
-                    <option <?= $this->selectedIf('BranchId', $branch->BranchId) ?> value="<?= $branch->BranchId ?>"><?= $branch->BranchName ?></option>
+                    <option <?= $this->selectedIf('BankBranchId', $branch->BankBranchId) ?> value="<?= $branch->BankBranchId ?>"><?= $branch->BankBranchName ?></option>
                 <?php endforeach;endif; ?>
             </select>
         </div>

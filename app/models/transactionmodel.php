@@ -31,7 +31,7 @@ class TransactionModel extends AbstractModel
 
     protected static $primaryKey = 'TransactionId';
 
-    public static function getAll()
+    public static function getAll($branch = false)
     {
         return self::get(
             'SELECT t1.*, 
@@ -51,6 +51,33 @@ class TransactionModel extends AbstractModel
             ' INNER JOIN ' . UserProfileModel::getModelTableName() . ' t4 ON t4.UserId = t1.UserId' .
             ' INNER JOIN ' . BranchModel::getModelTableName() . ' t5 ON t5.BranchId = t1.BranchId' .
             ' LEFT JOIN ' . UserProfileModel::getModelTableName() . ' t6 ON t6.UserId = t1.UpdatedBy' .
+            (($branch !== false) ? (' WHERE t1.BranchId = ' . $branch ) : '') .
+            ' ORDER BY t1.Created DESC'
+        );
+    }
+
+    public static function getAllForAuditors($branch)
+    {
+        return self::get(
+            'SELECT t1.*, 
+                  t2.TransactionType thetype, 
+                  t3.name ClientName, 
+                  CONCAT_WS(" ", t4.FirstName, t4.LastName) UserName, 
+                  t5.BranchName, 
+                  CONCAT_WS(" ", t6.FirstName, t6.LastName) UpdatingUser,
+                  (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
+                  (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
+                  (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
+                  (SELECT 1 FROM ' . ChequeModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) ChequeOrdered,
+                  (SELECT 1 FROM ' . SignatureRequestModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) SignatureRequest
+                  FROM ' . self::$tableName . ' t1' .
+            ' INNER JOIN ' . TransactionTypeModel::getModelTableName() . ' t2 ON t2.TransactionTypeId = t1.TransactionTypeId' .
+            ' INNER JOIN ' . ClientModel::getModelTableName() . ' t3 ON t3.id = t1.ClientId' .
+            ' INNER JOIN ' . UserProfileModel::getModelTableName() . ' t4 ON t4.UserId = t1.UserId' .
+            ' INNER JOIN ' . BranchModel::getModelTableName() . ' t5 ON t5.BranchId = t1.BranchId' .
+            ' LEFT JOIN ' . UserProfileModel::getModelTableName() . ' t6 ON t6.UserId = t1.UpdatedBy' .
+            ' WHERE t1.BranchId = ' . $branch .
+            ' HAVING StatusType >= ' . TransactionStatusModel::STATUS_TRANSACTION_APPROVED_BY_MANAGER .
             ' ORDER BY t1.Created DESC'
         );
     }

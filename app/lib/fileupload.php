@@ -89,7 +89,8 @@ class FileUpload
 
     public function remove($file)
     {
-        if($file !== '' && file_exists(IMAGES_UPLOAD_STORAGE.DS.$file) && is_writable(IMAGES_UPLOAD_STORAGE)) {
+        if($file == '') return true;
+        if(file_exists(IMAGES_UPLOAD_STORAGE.DS.$file) && is_writable(IMAGES_UPLOAD_STORAGE)) {
             unlink(IMAGES_UPLOAD_STORAGE.DS.$file);
         }
     }

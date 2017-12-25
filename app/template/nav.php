@@ -18,6 +18,10 @@
         <li class="<?= $this->matchUrl(['/bankaccounts', '/bankaccounts/default', '/bankaccounts/create', '/bankaccounts/edit']) === true ? ' selected' : '' ?>"><a href="/bankaccounts"><i class="fa fa-dollar"></i> <?= $text_bank_accounts ?></a></li>
         <?php endif; ?>
 
+        <?php if((bool) preg_match('/bankbranches/', $__privileges)): ?>
+        <li class="<?= $this->matchUrl(['/bankbranches', '/bankbranches/default', '/bankbranches/create', '/bankbranches/edit']) === true ? ' selected' : '' ?>"><a href="/bankbranches"><i class="fa fa-globe"></i> <?= $text_bank_branches ?></a></li>
+        <?php endif; ?>
+
         <?php if((bool) preg_match('/clients/', $__privileges)): ?>
         <li class="submenu<?= $this->matchUrl(['/clients', '/clients/default', '/clients/create', '/clients/edit', '/clients/view']) === true ? ' selected' : '' ?>">
             <a href="javascript:;"><i class="fa fa-users"></i> <?= $text_clients ?></a>
@@ -78,6 +82,10 @@
                 <?php endif; ?>
             </ul>
         </li>
+        <?php endif; ?>
+
+        <?php if((bool) preg_match('/auditroutes/', $__privileges)): ?>
+        <li class="<?= $this->matchUrl(['/auditroutes','/auditroutes/default', '/auditroutes/create', '/auditroutes/edit']) === true ? ' selected' : '' ?>"><a href="/auditroutes"><i class="fa fa-arrows-alt"></i> <?= $text_audit_routes ?></a></li>
         <?php endif; ?>
 
         <?php if((bool) preg_match('/cheques/', $__privileges)): ?>

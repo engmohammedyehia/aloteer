@@ -39,6 +39,7 @@ trait TemplateHelper
 
     public function boxCheckedIf($fieldName, $value, $object = null)
     {
+
         return ((isset($_POST[$fieldName]) && is_array($_POST[$fieldName]) && in_array($value, $_POST[$fieldName])) || ($object !== null && is_array($object->$fieldName) && in_array($value, $object->$fieldName))) ? 'checked' : '';
     }
 }

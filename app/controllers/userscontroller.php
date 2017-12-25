@@ -204,7 +204,7 @@ class UsersController extends AbstractController
             $profile->FirstName = $this->filterString($_POST['FirstName']);
             $profile->LastName = $this->filterString($_POST['LastName']);
             $profile->Address = $this->filterString($_POST['Address']);
-            $profile->DOB = $this->filterString($_POST['DOB']);
+            $profile->DOB = $_POST['DOB'] === '' ? date('Y-m-d') : $this->filterString($_POST['DOB']);
             $user->PhoneNumber = $this->filterString($_POST['PhoneNumber']);
 
             if(!empty($_FILES['Image']['name'])) {
@@ -229,7 +229,7 @@ class UsersController extends AbstractController
                 }
             }
 
-            if(!$uploader->hasError && !$uploader2->hasError && $profile->save() && $user->save()) {
+            if((!@$uploader->hasError || !@$uploader2->hasError) && $profile->save() && $user->save()) {
                 $user->profile = $profile;
                 $this->session->u = $user;
                 $this->messenger->add($this->language->get('message_profile_saved_success'));
