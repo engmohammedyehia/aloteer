@@ -1,13 +1,13 @@
 <?php
 
-$_['title'] = 'معاملات للمراجعة';
-$_['text_table_transaction_title'] = 'عنوان المعاملة';
-$_['text_table_transaction_created'] = 'بتاريخ';
-$_['text_table_transaction_updated'] = 'حدثت بتاريخ';
-$_['text_table_transaction_updated_by'] = 'حدثها';
-$_['text_table_transaction_branch'] = 'الفرع';
-$_['text_table_transaction_client'] = 'العميل';
-$_['text_table_transaction_user'] = 'أنشأها';
-$_['text_table_transaction_status'] = 'حالة المعاملة';
-$_['text_table_control'] = 'التحكم';
-$_['text_table_control_audit'] = 'مراجعة المعاملة';
+$_['title'] = 'Transaction for auditing';
+$_['text_table_transaction_title'] = 'Transaction title';
+$_['text_table_transaction_created'] = 'Date';
+$_['text_table_transaction_updated'] = 'Updated on';
+$_['text_table_transaction_updated_by'] = 'Updated by';
+$_['text_table_transaction_branch'] = 'Branch';
+$_['text_table_transaction_client'] = 'Beneficiary';
+$_['text_table_transaction_user'] = 'Created by';
+$_['text_table_transaction_status'] = 'Statu';
+$_['text_table_control'] = 'Control';
+$_['text_table_control_audit'] = 'Audit transaction';

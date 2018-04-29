@@ -48,7 +48,7 @@ class FrontController
         // Check if the user is authorized to access the application
         if(!$this->_authentication->isAuthorized()) {
             if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-                if($this->_controller != 'auth' || !in_array($this->_action, ['authenticate','loadprofile','loadprivileges','dologin'])) {
+                if($this->_controller != 'auth' || !in_array($this->_action, ['authenticate','loadprofile','loadprivileges','dologin', 'checksms'])) {
                     exit('This request is not allowed');
                 }
             } else {

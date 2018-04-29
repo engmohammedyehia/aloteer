@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تعديل بيانات فرع';
+$_['title'] = 'Edit a branch';

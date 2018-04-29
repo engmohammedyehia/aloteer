@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'إنشاء معاملة جديد';
+$_['title'] = 'Create a new transaction';

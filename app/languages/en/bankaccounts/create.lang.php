@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'إضافة حساب بنكي جديد';
+$_['title'] = 'Create a new bank account';

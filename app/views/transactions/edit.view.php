@@ -1,11 +1,11 @@
 <form autocomplete="off" class="appForm clearfix" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset>
         <legend><?= $text_employee_details ?></legend>
-        <div class="input_wrapper n40 border">
+        <div class="input_wrapper n50 border">
             <label<?= $this->labelFloat('TransactionTitle', $transaction) ?>><?= $text_label_TransactionTitle ?> <span class="required">*</span></label>
             <input required type="text" name="TransactionTitle" id="TransactionTitle" maxlength="80" value="<?= $this->showValue('TransactionTitle', $transaction) ?>">
         </div>
-        <div class="input_wrapper_other n30 full_padding select border required">
+        <div class="input_wrapper_other n50 right_padding select required">
             <span class="required">*</span>
             <select required name="TransactionTypeId" id="TransactionTypeId">
                 <option value=""><?= $text_label_TransactionTypeId_select ?></option>
@@ -14,12 +14,21 @@
                 <?php endforeach; endif; ?>
             </select>
         </div>
-        <div class="input_wrapper_other n30 padding select required">
+        <div class="input_wrapper_other n50 left_padding select required border">
             <span class="required">*</span>
             <select required name="ClientId" id="ClientId">
                 <option value=""><?= $text_label_TransactionTypeId_select ?></option>
                 <?php if (false !== $clients): foreach ($clients as $client): ?>
                     <option <?= $this->selectedIf('ClientId', $client->id, $transaction) ?> value="<?= $client->id ?>"><?= $client->name ?></option>
+                <?php endforeach; endif; ?>
+            </select>
+        </div>
+        <div class="input_wrapper_other n50 padding select required">
+            <span class="required">*</span>
+            <select required name="ProjectId" id="ProjectId">
+                <option value=""><?= $text_label_ProjectId_select ?></option>
+                <?php if (false !== $projects): foreach ($projects as $project): ?>
+                    <option <?= $this->selectedIf('ProjectId', $project->ProjectId, $transaction) ?> value="<?= $project->ProjectId ?>"><?= $project->ProjectName ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>

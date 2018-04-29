@@ -1,4 +1,4 @@
 <?php
 
-$_['message_save_success'] = 'تم تغيير حالة المعاملة بنجاح';
-$_['message_save_failed'] = 'خطأ في تغيير حالة المعاملة';
+$_['message_save_success'] = 'Transaction status changed successfully';
+$_['message_save_failed'] = 'Error changing transaction status';

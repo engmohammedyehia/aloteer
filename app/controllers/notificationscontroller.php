@@ -41,15 +41,45 @@ class NotificationsController extends AbstractController
         $this->redirect($notification->URL);
     }
 
+    public function deleteAction()
+    {
+        $id = $this->filterInt($this->_params[0]);
+        $notification = NotificationModel::getByPK($id);
+
+        if($notification === false || $notification->UserId != $this->session->u->UserId) {
+            $this->redirect('/notifications');
+        }
+
+        $this->language->load('notifications.messages');
+
+        if($notification->delete()) {
+            $this->messenger->add($this->language->get('notifications_delete_success'));
+        } else {
+            $this->messenger->add($this->language->get('notifications_delete_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+
+        $this->redirect('/notifications');
+    }
+
     public function readAllAction()
     {
-        if(NotificationModel::reallAll($this->session->u) === true)
-            $this->redirect('/notifications');
+        $this->language->load('notifications.messages');
+        if(NotificationModel::reallAll($this->session->u) === true) {
+            $this->messenger->add($this->language->get('notifications_read_all_success'));
+        } else {
+            $this->messenger->add($this->language->get('notifications_read_all_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+        $this->redirect('/notifications');
     }
 
     public function truncateAction()
     {
-        if(NotificationModel::truncate($this->session->u) === true)
-            $this->redirect('/notifications');
+        $this->language->load('notifications.messages');
+        if(NotificationModel::truncate($this->session->u) === true) {
+            $this->messenger->add($this->language->get('notifications_truncate_success'));
+        } else {
+            $this->messenger->add($this->language->get('notifications_truncate_failed'), Messenger::APP_MESSAGE_ERROR);
+        }
+        $this->redirect('/notifications');
     }
 }

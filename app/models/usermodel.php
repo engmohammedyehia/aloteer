@@ -15,6 +15,7 @@ class UserModel extends AbstractModel
     public $GroupId;
     public $Status;
     public $BranchId;
+    public $SMSCode;
 
     /**
      * @var UserProfileModel
@@ -35,6 +36,7 @@ class UserModel extends AbstractModel
         'GroupId'           => self::DATA_TYPE_INT,
         'BranchId'          => self::DATA_TYPE_INT,
         'Status'            => self::DATA_TYPE_INT,
+        'SMSCode'           => self::DATA_TYPE_INT
     );
 
     protected static $primaryKey = 'UserId';
@@ -73,23 +75,33 @@ class UserModel extends AbstractModel
         ');
     }
 
-    public static function authenticate ($username, $password, $session)
+    public static function authenticate ($username, $password, $smsEnabled = false)
     {
         $password = crypt($password, APP_SALT) ;
         $sql = 'SELECT *, (SELECT GroupName FROM app_users_groups WHERE app_users_groups.GroupId = ' . self::$tableName . '.GroupId) GroupName FROM ' . self::$tableName . ' WHERE Username = "' . $username . '" AND Password = "' .  $password . '"';
         $foundUser = self::getOne($sql);
-
-        $appDisables = UserSettingsModel::getByKeyGeneral('DisableApp');
 
         if(false !== $foundUser) {
             if($foundUser->Status == 2) {
                 return 2;
             }
             $foundUser->LastLogin = date('Y-m-d H:i:s');
+            if(false !== $smsEnabled) $foundUser->SMSCode = rand(1000,9999);
             $foundUser->save();
             return $foundUser;
         }
         return false;
+    }
+
+    public static function checkSMS ($username, $code)
+    {
+        $sql = 'SELECT SMSCode FROM ' . self::$tableName . ' WHERE Username = "' . $username . '" AND SMSCode = ' . $code;
+        $foundUser = self::getOne($sql);
+
+        if(false !== $foundUser) {
+            return 1;
+        }
+        return 2;
     }
 
     public function getUserRecords ()

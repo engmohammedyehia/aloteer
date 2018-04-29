@@ -47,6 +47,10 @@
         <li class="<?= $this->matchUrl(['/transactionconditions','/transactionconditions/default','/transactionconditions/create','/transactionconditions/edit']) === true ? ' selected' : '' ?>"><a href="/transactionconditions"><i class="fa fa-check-square"></i> <?= $text_transactions_conditions ?></a></li>
         <?php endif; ?>
 
+        <?php if((bool) preg_match('/projects/', $__privileges)): ?>
+        <li class="<?= $this->matchUrl(['/projects', '/projects/default', '/projects/create', '/projects/edit']) === true ? ' selected' : '' ?>"><a href="/projects"><i class="fa fa-tasks"></i> <?= $text_projects ?></a></li>
+        <?php endif; ?>
+
         <?php if((bool) preg_match('/transactions/', $__privileges)): ?>
         <li class="submenu<?= $this->matchUrl(['/transactions', '/transactions/default', '/transactions/create', '/transactions/edit', '/transactions/view', '/transactions/timeline', '/transactions/cover']) === true ? ' selected' : '' ?>">
             <a href="javascript:;"><i class="fa fa-briefcase"></i> <?= $text_transactions ?></a>
@@ -89,7 +93,7 @@
         <?php endif; ?>
 
         <?php if((bool) preg_match('/cheques/', $__privileges)): ?>
-        <li class="submenu<?= $this->matchUrl(['/cheques/default', '/cheques/printing', '/cheques/printed', '/cheques/handedover', '/cheques/edit', '/cheques/view', '/cheques/cleared', '/cheques/canceled', '/cheques/obsoleted']) === true ? ' selected' : '' ?>">
+        <li class="submenu<?= $this->matchUrl(['/cheques/default', '/cheques/printing', '/cheques/printed', '/cheques/handedover', '/cheques/handoverinvoice', '/cheques/edit', '/cheques/view', '/cheques/cleared', '/cheques/canceled', '/cheques/obsoleted']) === true ? ' selected' : '' ?>">
             <a href="javascript:;"><i class="fa fa-vcard"></i> <?= $text_cheques ?></a>
             <ul>
                 <?php if(array_key_exists('/cheques/default', $__privilegesKeys)): ?>
@@ -115,10 +119,6 @@
                 <?php endif; ?>
             </ul>
         </li>
-        <?php endif; ?>
-
-        <?php if((bool) preg_match('/signaturerequest/', $__privileges)): ?>
-        <li class="<?= $this->matchUrl(['/signaturerequest','/signaturerequest/default']) === true ? ' selected' : '' ?>"><a href="/signaturerequest"><i class="fa fa-pencil"></i> <?= $text_signature_requests ?></a></li>
         <?php endif; ?>
 
         <?php if((bool) preg_match('/branches/', $__privileges)): ?>

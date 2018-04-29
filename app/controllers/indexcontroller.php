@@ -34,9 +34,11 @@ class IndexController extends AbstractController
         if($this->session->lang == 'ar') {
             $labels = '[ "يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس",
                     "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر" ]';
+            $transaction_keyword = 'المعاملات';
         } else {
             $labels = '[ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug",
                     "Sep", "Oct", "Nov", "Dec" ]';
+            $transaction_keyword = 'Transactions';
         }
         $monthlyTransactions = TransactionModel::getTransactionsForMonths();
         $this->_data['barchart'] = '<script>';
@@ -44,7 +46,7 @@ class IndexController extends AbstractController
             var barChartData = {
                 labels: {$labels},
                 datasets: [{
-                    label: 'المعاملات',
+                    label: '{$transaction_keyword}',
                     backgroundColor: '#f5f5f5',
                     borderColor: '#0077b5',
                     borderWidth: 2,
@@ -76,9 +78,10 @@ class IndexController extends AbstractController
         ";
         $branches = BranchModel::getAll();
         $chequesIssued = [];
-        $colors = ['#0077b5', '#ccc', '#60aed6', '#e4e4e4'];
+        $colors = [];
         $i = 0;
         foreach ($branches as $branch) {
+            $colors[] = $branch->Color;
             $chequesIssued[] = "{
                     label: '{$branch->BranchName}',
                     backgroundColor: '" . $colors[$i++] . "',

@@ -3,6 +3,7 @@ namespace PHPMVC\Lib;
 
 use PHPMVC\Models\MailModel;
 use PHPMVC\Models\NotificationModel;
+use PHPMVC\Models\UserSettingsModel;
 
 final class Startup
 {
@@ -32,6 +33,8 @@ final class Startup
                     call_user_func(array($this, $method->name));
                 }
             }
+        } else {
+            $this->getHijriDate();
         }
     }
     
@@ -51,6 +54,29 @@ final class Startup
             $userId = $this->session->u->UserId;
             $total = NotificationModel::get('SELECT * FROM app_notifications WHERE Seen = 0 AND UserId = ' . $userId . ' ORDER BY Created DESC LIMIT 5');
             $this->notificationsTotal = ($total !== false) ? $total : 0;
+        }
+    }
+
+    private function getHijriDate()
+    {
+        $chequePath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if((bool) preg_match('#' . preg_quote('/cheques') . '#i', $chequePath) === true ||
+            (bool) preg_match('#' . preg_quote('/auth/login') . '#i', $chequePath) === true) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL,'https://api.aladhan.com/gToH?date='.date('d-m-Y'));
+            $hijriDate=curl_exec($ch);
+            curl_close($ch);
+            $hijriDate = json_decode($hijriDate);
+            $hijriDate = new \DateTime($hijriDate->data->hijri->date);
+            $hijriCorrection = UserSettingsModel::getByKeyGeneral('CorrectHijriDate');
+            if(false !== $hijriCorrection) {
+                $intervalStr = 'P' . abs($hijriCorrection->TheValue) . 'D';
+                $interval = new \DateInterval($intervalStr);
+                $hijriDate->sub($interval);
+            }
+            $this->_hijri_ = $hijriDate->format('Y-m-d');
         }
     }
 

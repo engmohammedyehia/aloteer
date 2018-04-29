@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تعديل بيانات حساب بنكي';
+$_['title'] = 'Edit bank account';

@@ -25,7 +25,7 @@
             <select disabled required name="AccountId" id="AccountId">
                 <option value=""><?= $text_label_AccountId ?></option>
                 <?php if (false !== $bankAccounts): foreach ($bankAccounts as $bankAccount): ?>
-                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId, $cheque) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName ?></option>
+                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId, $cheque) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName . ' (' . $bankAccount->BranchName . ')' ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>
@@ -47,6 +47,13 @@
                 <?php endforeach; endif; ?>
             </select>
         </div>
+        <div class="input_wrapper_other n100">
+            <label><?= $text_label_handedToTheFirstBeneficier ?></label>
+            <label class="checkbox block">
+                <input <?= $this->radioCheckedIf('handedToTheFirstBeneficier', 1, $cheque) ?> type="checkbox" name="handedToTheFirstBeneficier" id="handedToTheFirstBeneficier" value="1">
+                <div class="checkbox_button"></div>
+            </label>
+        </div>
         <input type="hidden" name="token" value="<?= $this->_registry->session->CSRFToken ?>">
         <button onclick="window.print();"><?= $text_label_print ?></button>
         <input class="no_float" onclick="if(!confirm('<?= $text_table_control_printed_confirm ?>')) return false;" type="submit" name="submit" value="<?= $text_label_confirm_save ?>">
@@ -55,10 +62,12 @@
 <div class="cheque_print">
     <div class="cheque_date"><?= $cheque->Created ?></div>
     <div class="cheque_number"><?= $cheque->ChequeNumber ?></div>
+    <?php if ((int) $cheque->handedToTheFirstBeneficier === 1): ?>
+    <div class="no_hand_to">#لا يصرف إلا للمستفيد الأول#</div>
+    <?php endif; ?>
     <div class="cheque_branch"><?= $BranchName ?></div>
-    <div class="cheque_client"><?= $cheque->ClientName ?></div>
-    <div class="cheque_amount"><?= $cheque->Amount ?></div>
-    <div class="cheque_amount_literal"><?= $cheque->AmountLiteral ?></div>
+    <div class="cheque_client">المكرم/ <?= $cheque->ClientName ?></div>
+    <div class="cheque_amount">#<?= $cheque->Amount ?>#</div>
+    <div class="cheque_amount_literal"><?= $cheque->AmountLiteral ?> ريال فقط لا غير</div>
     <div class="cheque_reason"><?= $cheque->Reason ?></div>
-
 </div>

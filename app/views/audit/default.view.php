@@ -1,6 +1,7 @@
 <table class="data">
     <thead>
     <tr>
+        <th>#</th>
         <th><?= $text_table_title ?></th>
         <th><?= $text_table_assigned_by ?></th>
         <th><?= $text_table_assigned_to ?></th>
@@ -13,6 +14,7 @@
         foreach ($orders as $order) {
             ?>
             <tr>
+                <td><?= $order->TransactionId ?></td>
                 <td><?= $order->TransactionTitle ?></td>
                 <td><?= $order->AssignedByName ?></td>
                 <td><?= $order->AssignedToName ?></td>

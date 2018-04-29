@@ -34,9 +34,9 @@
             <img src="/img/logo.png" alt="<?= $text_intro_title ?>">
         <?php } ?>
         <?php if (isset($disabled)) { ?>
-            <p><span><?= date('Y-m-d') ?></span><?= $disabled ?></p>
+            <p><span><?= $this->_jdate_ ?></span><?= $disabled ?></p>
         <?php } else { ?>
-            <p><span><?= $text_intro ?></p>
+            <p><span><?= $this->startup->_hijri_ ?></span><?= $text_intro ?></p>
         <?php } ?>
     </div>
 </div>

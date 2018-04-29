@@ -12,3 +12,4 @@ $_['message_cheque_success'] = 'تم اعتماد صرف الشيك بنجاح';
 $_['message_cheque_failed'] = 'خطأ في اعتماد صرف الشيك';
 $_['message_close_success'] = 'تم إغلاق المعاملة بنجاح';
 $_['message_close_failed'] = 'خطأ في عملية إغلاق المعاملة';
+$_['message_transaction_returned'] = 'تم رفض المعاملة بنجاح';

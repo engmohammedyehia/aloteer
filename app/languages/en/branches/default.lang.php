@@ -1,10 +1,9 @@
 <?php
 
-$_['title'] = 'الفروع';
-$_['text_header'] = 'الفروع';
-$_['text_new_item'] = 'إضافة فرع جديد';
-$_['text_table_branch_name'] = 'إسم الفرع';
-$_['text_table_control'] = 'التحكم';
-$_['text_table_control_edit'] = 'تعديل بيانات فرع';
-$_['text_table_control_delete'] = 'حذف فرع';
-$_['text_table_control_delete_confirm'] = 'هل تود حذف فرع؟';
+$_['title'] = 'Branches';
+$_['text_new_item'] = 'Create a new branch';
+$_['text_table_branch_name'] = 'Branch Name';
+$_['text_table_control'] = 'Control';
+$_['text_table_control_edit'] = 'Edit branch';
+$_['text_table_control_delete'] = 'Delete branch';
+$_['text_table_control_delete_confirm'] = 'Would you like to delete the branch?';

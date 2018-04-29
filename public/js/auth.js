@@ -140,6 +140,11 @@ $(document).ready(
                             $('#loginfrm p.overlay').hide();
                             $('#loginfrm input[type=submit]').val('دخول');
                             $('p#loginerror').show().html('عفوا كلمة المرور او اسم المستخدم غير صحيح');
+                        } else if(output == 4) {
+                            $('#loginfrm p.spinner').hide();
+                            $('#loginfrm p.overlay').hide();
+                            $('#loginfrm input[type=submit]').val('دخول');
+                            $('p#loginerror').show().html('عفوا لقد انتهى وقت الدوام الرسمي');
                         }
                     },
                     error: function()

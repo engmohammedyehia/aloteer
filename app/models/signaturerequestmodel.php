@@ -33,9 +33,7 @@ class SignatureRequestModel extends AbstractModel
     public static function getSignaturesForTransaction (TransactionModel $transaction)
     {
         return self::get(
-            'SELECT t1.*, CONCAT_WS(" ", t2.FirstName, t2.LastName) EmpName, t2.Signature FROM ' . self::$tableName . ' t1
-                  INNER JOIN ' . UserProfileModel::getModelTableName() . ' t2 ON t2.UserId = t1.UserId
-                  WHERE t1.TransactionId = ' . $transaction->TransactionId
+            'SELECT t1.UserId, CONCAT_WS(" ", t2.FirstName, t2.LastName) EmpName, t2.Signature, t3.GroupId FROM ' . TransactionStatusModel::getModelTableName() . ' t1 INNER JOIN ' . UserProfileModel::getModelTableName() . ' t2 ON t2.UserId = t1.UserId INNER JOIN ' . UserModel::getModelTableName() . ' t3 ON t3.UserId = t1.UserId WHERE t1.TransactionId = ' . $transaction->TransactionId . ' GROUP BY t1.UserId'
         );
     }
 }

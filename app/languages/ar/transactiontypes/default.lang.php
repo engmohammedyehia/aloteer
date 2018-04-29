@@ -1,7 +1,6 @@
 <?php
 
 $_['title'] = 'أنواع المعاملات';
-$_['text_header'] = 'أنواع المعاملات';
 $_['text_new_item'] = 'إضافة نوع معاملات جديد';
 $_['text_table_privilege'] = 'نوع المعاملة';
 $_['text_table_control'] = 'التحكم';

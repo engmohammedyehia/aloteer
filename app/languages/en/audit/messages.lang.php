@@ -1,4 +1,4 @@
 <?php
 
-$_['message_save_success'] = 'تم إصدار أمر المراجعة بنجاح';
-$_['message_save_failed'] = 'خطأ في إصدار أمر المراجعة';
+$_['message_save_success'] = 'Audit request issued successfully';
+$_['message_save_failed'] = 'Error in issuing audit request';

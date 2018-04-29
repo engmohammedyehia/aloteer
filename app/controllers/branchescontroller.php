@@ -39,6 +39,7 @@ class BranchesController extends AbstractController
         ) {
             $type = new BranchModel();
             $type->BranchName = $this->filterString($_POST['BranchName']);
+            $type->Color = $this->filterString($_POST['Color']);
             if($type->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/branches');
@@ -73,6 +74,7 @@ class BranchesController extends AbstractController
             $this->requestHasValidToken()
         ) {
             $type->BranchName = $this->filterString($_POST['BranchName']);
+            $type->Color = $this->filterString($_POST['Color']);
             if($type->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/branches');

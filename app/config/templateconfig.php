@@ -27,7 +27,7 @@ return [
         'helper'                => JS . 'helper.js',
         'datatables'            => JS . 'datatables' . $_SESSION['lang'] . '.js',
         'selectivity'           => JS . 'selectivity.js',
-        'auth'                  => JS . 'auth.js',
+        'auth'                  => JS . 'auth' . $_SESSION['authwithsms'] . '.js',
         'main'                  => JS . 'main.js'
     ]
 ];

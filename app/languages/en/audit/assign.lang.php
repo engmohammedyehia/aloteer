@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'إصدار امر مراجعة';
+$_['title'] = 'Request auditing';

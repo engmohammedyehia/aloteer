@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'أضافة ملف لمعاملة %s';
+$_['title'] = 'Attach a new for for transaction %s';

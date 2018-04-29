@@ -31,11 +31,15 @@
                 <td><?= $transaction->UserName ?></td>
                 <td><?= (new \DateTime($transaction->Updated))->format('Y-m-d') ?></td>
                 <td><?= $transaction->UpdatingUser ?></td>
-                <td><?= ${'text_status_' . $transaction->StatusType} ?> <?= ((int) $transaction->StatusType !== \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW) ? $transaction->StatusUser : '' ?></td>
+                <td><?= ${'text_status_' . $transaction->StatusType} ?> <?= ((int) $transaction->StatusType !== \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW) ? $transaction->StatusUser : '' ?> <?= $transaction->StatusNote !== '' ? ' - ' . $transaction->StatusNote : '' ?></td>
                 <td><?= $transaction->Audited == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>' ?></td>
                 <td class="controls_td">
                     <a href="javascript:;" class="open_controls"><i class="fa fa-caret-square-o-left"></i></a>
                     <div class="controls_container">
+                        <?php if(array_key_exists('/transactions/correction', $__privilegesKeys) && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_RETURNED): ?>
+                            <a href="/transactions/correction/<?= $transaction->TransactionId ?>" onclick="if(!confirm('<?= $text_table_control_correction_confirm ?>')) return false;"><i class="fa fa-thumbs-up"></i> <?= $text_table_control_correction ?></a>
+                        <?php endif; ?>
+
                         <?php if(array_key_exists('/transactions/view', $__privilegesKeys)): ?>
                         <a href="/transactions/view/<?= $transaction->TransactionId ?>"><i class="fa fa-eye"></i> <?= $text_table_control_view ?></a>
                         <?php endif; ?>
@@ -69,32 +73,26 @@
                         <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if(array_key_exists('/cheques/order', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered !== 1 && (int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_REVIEWED): ?>
-                            <a href="/cheques/order/<?= $transaction->TransactionId ?>"><i class="fa fa-money"></i> <?= $text_table_control_order_cheque ?></a>
-                        <?php endif; ?>
-                        <?php endif; ?>
-
                         <?php if(array_key_exists('/transactions/executiveconfirm', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTED): ?>
+                        <?php if ((int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_REVIEWED): ?>
                             <a href="/transactions/executiveconfirm/<?= $transaction->TransactionId ?>" onclick="if(!confirm('<?= $text_table_control_executive_confirm_confirm ?>')) return false;"><i class="fa fa-check"></i> <?= $text_table_control_executive_confirm ?></a>
                         <?php endif; ?>
                         <?php endif; ?>
 
+                        <?php if(array_key_exists('/cheques/order', $__privilegesKeys)): ?>
+                            <?php if ((int) $transaction->ChequeOrdered !== 1 && (int) $transaction->Audited === 1 && (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW): ?>
+                                <a href="/cheques/order/<?= $transaction->TransactionId ?>"><i class="fa fa-money"></i> <?= $text_table_control_order_cheque ?></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
                         <?php if(array_key_exists('/transactions/cover', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && (int) $transaction->SignatureRequest === 1): ?>
+                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && $transaction->CEOApproved !== null): ?>
                             <a href="/transactions/cover/<?= $transaction->TransactionId ?>"><i class="fa fa-file"></i> <?= $text_table_control_cover ?></a>
                         <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if(array_key_exists('/signaturerequest/create', $__privilegesKeys)): ?>
-                            <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && ((int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTED || (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW) && $transaction->SignatureRequest === null): ?>
-                                <a href="/signaturerequest/create/<?= $transaction->TransactionId ?>"><i class="fa fa-pencil"></i> <?= $text_table_control_signature_request ?></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-
                         <?php if(array_key_exists('/transactions/chequeready', $__privilegesKeys)): ?>
-                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && ((int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_READY || (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_READY_NO_COVERAGE || (int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW)): ?>
+                        <?php if ((int) $transaction->ChequeOrdered === 1 && (int) $transaction->Audited === 1 && $transaction->CEOApproved !== null && ((int) $transaction->StatusType === \PHPMVC\Models\TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_READY_NO_COVERAGE || (int) $transaction->ChequePrinted === \PHPMVC\Models\ChequeModel::CHEQUE_ORDER_PRINTED)): ?>
                             <a href="/transactions/chequeready/<?= $transaction->TransactionId ?>"><i class="fa fa-check"></i> <?= $text_table_control_confirm_cheque_ready ?></a>
                         <?php endif; ?>
                         <?php endif; ?>

@@ -10,6 +10,7 @@ use PHPMVC\LIB\Language;
 use PHPMVC\LIB\SessionManager;
 use PHPMVC\Lib\Startup;
 use PHPMVC\LIB\Template\Template;
+use PHPMVC\Models\UserSettingsModel;
 
 if(!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
@@ -23,6 +24,10 @@ $session->start();
 
 if(!isset($session->lang)) {
     $session->lang = APP_DEFAULT_LANGUAGE;
+}
+
+if(!isset($session->authwithsms)) {
+    $session->authwithsms = (int) UserSettingsModel::getByKeyGeneral('AuthSMS')->TheValue === 1 ? 'sms' : '';
 }
 
 $template_parts = require_once '..' . DS . 'app' . DS . 'config' . DS . 'templateconfig.php';

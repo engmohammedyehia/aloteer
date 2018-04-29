@@ -81,6 +81,19 @@
         <div class="input_wrapper_other n45 padding">
 
         </div>
+        <div class="input_wrapper n50 border">
+            <label<?= $this->labelFloat('BankName', $client) ?>><?= $text_label_BankName ?></label>
+            <input disabled type="text" name="BankName" id="BankName" maxlength="80" value="<?= $this->showValue('BankName', $client) ?>">
+        </div>
+        <div class="input_wrapper n50 padding">
+            <label<?= $this->labelFloat('BankIBAN', $client) ?>><?= $text_label_BankIBAN ?></label>
+            <input disabled type="text" name="BankIBAN" id="BankIBAN" maxlength="80" value="<?= $this->showValue('BankIBAN', $client) ?>">
+        </div>
+        <?php if ($client->CommercialRegistration !== null): ?>
+            <div class="input_wrapper_other n100">
+                <img src="/uploads/images/<?= $client->CommercialRegistration ?>" width="100%">
+            </div>
+        <?php endif; ?>
         <div class="input_wrapper_other"></div>
     </fieldset>
 </form>

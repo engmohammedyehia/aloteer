@@ -7,6 +7,7 @@ class BankAccountModel extends AbstractModel
     public $AccountId;
     public $BankName;
     public $BankAccountIBAN;
+    public $BankAccountNumber;
     public $BankAccountOwner;
     public $BankAccountUsage;
     public $BankBranchId;
@@ -16,6 +17,7 @@ class BankAccountModel extends AbstractModel
     protected static $tableSchema = array(
         'BankName'                  => self::DATA_TYPE_STR,
         'BankAccountIBAN'           => self::DATA_TYPE_STR,
+        'BankAccountNumber'         => self::DATA_TYPE_STR,
         'BankAccountOwner'          => self::DATA_TYPE_STR,
         'BankAccountUsage'          => self::DATA_TYPE_STR,
         'BankBranchId'              => self::DATA_TYPE_INT

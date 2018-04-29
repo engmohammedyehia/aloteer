@@ -25,6 +25,7 @@ class TransactionStatusModel extends AbstractModel
     const STATUS_TRANSACTION_CHEQUE_CLEARED = 12;
     const STATUS_TRANSACTION_SUSPENDED = 13;
     const STATUS_TRANSACTION_CLOSED = 14;
+    const STATUS_TRANSACTION_RETURNED = 15;
 
     public static $tableName = 'app_transactions_statuses';
     

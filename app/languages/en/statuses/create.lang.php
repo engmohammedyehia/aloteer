@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تغيير حالة المعاملة';
+$_['title'] = 'Change transaction status';

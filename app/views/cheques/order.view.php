@@ -10,14 +10,10 @@
             <input type="number" min="1" step="1" name="Amount" id="Amount" value="<?= $this->showValue('Amount') ?>">
         </div>
         <div class="input_wrapper n65 required padding">
-            <label<?= $this->labelFloat('AmountLiteral') ?>><?= $text_label_AmountLiteral ?> <span class="required">*</span></label>
-            <input type="text" name="AmountLiteral" id="AmountLiteral" value="<?= $this->showValue('AmountLiteral') ?>">
-        </div>
-        <div class="input_wrapper n50 border required">
             <label<?= $this->labelFloat('ClientName') ?>><?= $text_label_ClientName ?> <span class="required">*</span></label>
             <input type="text" name="ClientName" id="ClientName" value="<?= $this->showValue('ClientName') ?>">
         </div>
-        <div class="input_wrapper n50 required padding">
+        <div class="input_wrapper n100 required">
             <label<?= $this->labelFloat('Reason') ?>><?= $text_label_Reason ?> <span class="required">*</span></label>
             <input type="text" name="Reason" id="Reason" value="<?= $this->showValue('Reason') ?>">
         </div>
@@ -26,7 +22,7 @@
             <select required name="AccountId" id="AccountId">
                 <option value=""><?= $text_label_AccountId ?></option>
                 <?php if (false !== $bankAccounts): foreach ($bankAccounts as $bankAccount): ?>
-                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName ?></option>
+                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName . ' (' . $bankAccount->BranchName . ')' ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>
@@ -47,6 +43,13 @@
                     <option <?= $this->selectedIf('BranchId', $branch->BranchId) ?> value="<?= $branch->BranchId ?>"><?= $branch->BranchName ?></option>
                 <?php endforeach; endif; ?>
             </select>
+        </div>
+        <div class="input_wrapper_other n100">
+            <label><?= $text_label_handedToTheFirstBeneficier ?></label>
+            <label class="checkbox block">
+                <input checked type="checkbox" name="handedToTheFirstBeneficier" id="handedToTheFirstBeneficier" value="1">
+                <div class="checkbox_button"></div>
+            </label>
         </div>
         <input type="hidden" name="token" value="<?= $this->_registry->session->CSRFToken ?>">
         <input class="no_float" type="submit" name="submit" value="<?= $text_label_save ?>">

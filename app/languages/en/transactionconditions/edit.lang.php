@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تعديل بيانات شرط إستيفاء معاملة';
+$_['title'] = 'Editing a satisfaction condition';

@@ -1,6 +1,6 @@
 <?php
 
-$_['text_legend'] = 'بيانات نوع المعاملة';
+$_['text_legend'] = 'بيانات الشرط';
 $_['text_label_ConditionTitle'] = 'نص شرط الإستيفاء';
 $_['text_label_TransactionType'] = 'نوع المعاملة';
 $_['text_label_TransactionType_select'] = 'إختار نوع المعاملة';

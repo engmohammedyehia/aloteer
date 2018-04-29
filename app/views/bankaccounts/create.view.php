@@ -1,13 +1,17 @@
 <form autocomplete="off" class="appForm clearfix" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset>
         <legend><?= $text_legend ?></legend>
-        <div class="input_wrapper n50 border required">
+        <div class="input_wrapper n35 border required">
             <label<?= $this->labelFloat('BankName') ?>><?= $text_label_BankName ?> <span class="required">*</span></label>
             <input required type="text" name="BankName" id="BankName" value="<?= $this->showValue('BankName') ?>">
         </div>
-        <div class="input_wrapper n50 required padding">
+        <div class="input_wrapper n35 required padding border">
             <label<?= $this->labelFloat('BankAccountOwner') ?>><?= $text_label_BankAccountOwner ?> <span class="required">*</span></label>
             <input required type="text" name="BankAccountOwner" id="BankAccountOwner" value="<?= $this->showValue('BankAccountOwner') ?>">
+        </div>
+        <div class="input_wrapper n30 required padding">
+            <label<?= $this->labelFloat('BankAccountNumber') ?>><?= $text_label_BankAccountNumber ?> <span class="required">*</span></label>
+            <input required type="text" name="BankAccountNumber" id="BankAccountNumber" value="<?= $this->showValue('BankAccountNumber') ?>">
         </div>
         <div class="input_wrapper n40 border required">
             <label<?= $this->labelFloat('BankAccountUsage') ?>><?= $text_label_BankAccountUsage ?> <span class="required">*</span></label>

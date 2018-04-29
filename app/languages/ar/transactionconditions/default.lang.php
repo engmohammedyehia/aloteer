@@ -1,7 +1,6 @@
 <?php
 
 $_['title'] = 'شروط إستيفاء المعاملات';
-$_['text_header'] = 'شروط إستيفاء المعاملات';
 $_['text_new_item'] = 'إضافة شرط إستيفاء معاملة جديد';
 $_['text_table_transaction_condition'] = 'شرط الإستيفاء';
 $_['text_table_transaction_type'] = 'نوع المعاملة التابع لها الشرط';

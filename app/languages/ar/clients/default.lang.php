@@ -8,7 +8,6 @@ $_['text_table_city'] = 'المدينة';
 $_['text_table_mobile'] = 'الجوال';
 $_['text_table_transactions_count'] = 'عدد المعاملات';
 $_['text_table_control'] = 'التحكم';
-$_['text_delete_confirm'] = 'هل ترغب في حذف المستفيد؟';
 
 $_['text_table_control_view'] = 'عرض بيانات المستفيد';
 $_['text_table_control_edit'] = 'تعديل بيانات المستفيد';

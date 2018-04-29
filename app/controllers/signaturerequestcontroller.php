@@ -63,6 +63,7 @@ class SignatureRequestController extends AbstractController
         $this->language->load('signaturerequests.messages');
 
         if($success) {
+            NotificationModel::sendNotification($users, 'text_notification_request_signature', serialize([$transaction->TransactionTitle]), '/signaturerequest');
             $this->messenger->add($this->language->get('text_signature_request_success'));
         } else {
             $this->messenger->add($this->language->get('text_signature_request_failed'), Messenger::APP_MESSAGE_ERROR);

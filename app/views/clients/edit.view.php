@@ -1,4 +1,4 @@
-<form autocomplete="off" class="appForm clearfix" method="post" enctype="application/x-www-form-urlencoded">
+<form autocomplete="off" class="appForm clearfix" method="post" enctype="multipart/form-data">
     <fieldset>
         <legend><?= $text_employee_details ?></legend>
         <div class="input_wrapper n50 border">
@@ -83,6 +83,19 @@
             <label><?= $text_label_file ?></label>
             <input type="file" name="file" id="file" value="<?= $this->showValue('file') ?>">
         </div>
+        <div class="input_wrapper n50 border">
+            <label<?= $this->labelFloat('BankName', $client) ?>><?= $text_label_BankName ?></label>
+            <input type="text" name="BankName" id="BankName" maxlength="80" value="<?= $this->showValue('BankName', $client) ?>">
+        </div>
+        <div class="input_wrapper n50 padding">
+            <label<?= $this->labelFloat('BankIBAN', $client) ?>><?= $text_label_BankIBAN ?></label>
+            <input type="text" name="BankIBAN" id="BankIBAN" maxlength="80" value="<?= $this->showValue('BankIBAN', $client) ?>">
+        </div>
+        <?php if ($client->CommercialRegistration !== null): ?>
+            <div class="input_wrapper_other n100">
+                <img src="/uploads/images/<?= $client->CommercialRegistration ?>" width="100%">
+            </div>
+        <?php endif; ?>
         <input type="hidden" name="token" value="<?= $this->_registry->session->CSRFToken ?>">
         <input class="no_float" type="submit" name="submit" value="<?= $text_label_save ?>">
     </fieldset>

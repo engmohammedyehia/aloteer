@@ -26,7 +26,7 @@
             <select disabled required name="AccountId" id="AccountId">
                 <option value=""><?= $text_label_AccountId ?></option>
                 <?php if (false !== $bankAccounts): foreach ($bankAccounts as $bankAccount): ?>
-                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId, $cheque) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName ?></option>
+                    <option <?= $this->selectedIf('AccountId', $bankAccount->AccountId, $cheque) ?> value="<?= $bankAccount->AccountId ?>"><?= $bankAccount->BankName  . ' (' . $bankAccount->BranchName . ')' ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>
@@ -47,6 +47,13 @@
                     <option <?= $this->selectedIf('BranchId', $branch->BranchId, $cheque) ?> value="<?= $branch->BranchId ?>"><?= $branch->BranchName ?></option>
                 <?php endforeach; endif; ?>
             </select>
+        </div>
+        <div class="input_wrapper_other n100">
+            <label><?= $text_label_handedToTheFirstBeneficier ?></label>
+            <label class="checkbox block">
+                <input <?= $this->radioCheckedIf('handedToTheFirstBeneficier', 1, $cheque) ?> type="checkbox" name="handedToTheFirstBeneficier" id="handedToTheFirstBeneficier" value="1">
+                <div class="checkbox_button"></div>
+            </label>
         </div>
         <div class="input_wrapper_other"></div>
     </fieldset>

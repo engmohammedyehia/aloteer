@@ -51,6 +51,7 @@ class BankAccountsController extends AbstractController
             $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
             $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
+            $account->BankAccountNumber = $this->filterString($_POST['BankAccountNumber']);
             $account->BankBranchId = $this->filterInt($_POST['BankBranchId']);
 
             if($account->save()) {
@@ -94,6 +95,7 @@ class BankAccountsController extends AbstractController
             $account->BankAccountOwner = $this->filterString($_POST['BankAccountOwner']);
             $account->BankAccountUsage = $this->filterString($_POST['BankAccountUsage']);
             $account->BankAccountIBAN = $this->filterString($_POST['BankAccountIBAN']);
+            $account->BankAccountNumber = $this->filterString($_POST['BankAccountNumber']);
             $account->BankBranchId = $this->filterInt($_POST['BankBranchId']);
 
             if($account->save()) {

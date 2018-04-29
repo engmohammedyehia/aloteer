@@ -10,6 +10,7 @@ class TransactionModel extends AbstractModel
     public $ClientId;
     public $UserId;
     public $BranchId;
+    public $ProjectId;
     public $TransactionSummary;
     public $Created;
     public $UpdatedBy;
@@ -24,6 +25,7 @@ class TransactionModel extends AbstractModel
         'UserId'                    => self::DATA_TYPE_INT,
         'UpdatedBy'                 => self::DATA_TYPE_INT,
         'BranchId'                  => self::DATA_TYPE_INT,
+        'ProjectId'                 => self::DATA_TYPE_INT,
         'TransactionSummary'        => self::DATA_TYPE_STR,
         'Created'                   => self::DATA_TYPE_DATE,
         'Audited'                   => self::DATA_TYPE_BOOL
@@ -41,6 +43,9 @@ class TransactionModel extends AbstractModel
                   t5.BranchName, 
                   CONCAT_WS(" ", t6.FirstName, t6.LastName) UpdatingUser,
                   (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
+                  (SELECT st1.Note FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusNote,
+                  (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.StatusType = ' . TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW . ' LIMIT 1) CEOApproved,
+                  (SELECT app_cheques.Status FROM app_cheques WHERE app_cheques.TransactionId = t1.TransactionId ORDER BY app_cheques.ChequeId DESC LIMIT 1) ChequePrinted,
                   (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
                   (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
                   (SELECT 1 FROM ' . ChequeModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) ChequeOrdered,
@@ -66,6 +71,9 @@ class TransactionModel extends AbstractModel
                   t5.BranchName, 
                   CONCAT_WS(" ", t6.FirstName, t6.LastName) UpdatingUser,
                   (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
+                  (SELECT st1.Note FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusNote,
+                  (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.StatusType = ' . TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW . ' LIMIT 1) CEOApproved,
+                  (SELECT app_cheques.Status FROM app_cheques WHERE app_cheques.TransactionId = t1.TransactionId ORDER BY app_cheques.ChequeId DESC LIMIT 1) ChequePrinted,
                   (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
                   (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
                   (SELECT 1 FROM ' . ChequeModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId LIMIT 1) ChequeOrdered,
@@ -92,6 +100,9 @@ class TransactionModel extends AbstractModel
                   t5.BranchName, 
                   CONCAT_WS(" ", t6.FirstName, t6.LastName) UpdatingUser,
                   (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
+                  (SELECT st1.Note FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusNote,
+                  (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.StatusType = ' . TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW . ' LIMIT 1) CEOApproved,
+                  (SELECT app_cheques.Status FROM app_cheques WHERE app_cheques.TransactionId = t1.TransactionId ORDER BY app_cheques.ChequeId DESC LIMIT 1) ChequePrinted,
                   (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
                   (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
                   (SELECT AssignmentId FROM ' . AuditModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY Created DESC LIMIT 1) AuditOrder    
@@ -115,6 +126,9 @@ class TransactionModel extends AbstractModel
                   t5.BranchName, 
                   CONCAT_WS(" ", t6.FirstName, t6.LastName) UpdatingUser,
                   (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusType,
+                  (SELECT st1.Note FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1) StatusNote,
+                  (SELECT st1.StatusType FROM ' . TransactionStatusModel::getModelTableName() . ' st1 WHERE st1.StatusType = ' . TransactionStatusModel::STATUS_TRANSACTION_CEO_REVIEW . ' LIMIT 1) CEOApproved,
+                  (SELECT app_cheques.Status FROM app_cheques WHERE app_cheques.TransactionId = t1.TransactionId ORDER BY app_cheques.ChequeId DESC LIMIT 1) ChequePrinted,
                   (SELECT CONCAT_WS(" ", FirstName, LastName) FROM ' . UserProfileModel::getModelTableName() . ' st2 WHERE st2.UserId = (SELECT st3.UserId FROM ' . TransactionStatusModel::getModelTableName() . ' st3 WHERE st3.TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1)) StatusUser,
                   (SELECT StatusType FROM ' . TransactionStatusModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY StatusId DESC LIMIT 1),
                   (SELECT AssignmentId FROM ' . AuditModel::getModelTableName() .  ' WHERE TransactionId = t1.TransactionId ORDER BY Created DESC LIMIT 1) AuditOrder    

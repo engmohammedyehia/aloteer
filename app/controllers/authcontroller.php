@@ -2,6 +2,7 @@
 namespace PHPMVC\Controllers;
 
 use PHPMVC\LIB\Helper;
+use PHPMVC\LIB\InputFilter;
 use PHPMVC\lib\Messenger;
 use PHPMVC\Models\UserGroupPrivilegeModel;
 use PHPMVC\Models\UserModel;
@@ -11,6 +12,7 @@ use PHPMVC\Models\UserSettingsModel;
 class AuthController extends AbstractController
 {
     use Helper;
+    use InputFilter;
 
     public function loginAction()
     {
@@ -38,17 +40,42 @@ class AuthController extends AbstractController
     public function authenticateAction()
     {
         if(isset($_POST['ucname']) && isset($_POST['ucpwd'])) {
-            $isAuthorized = UserModel::authenticate($_POST['ucname'], $_POST['ucpwd'], $this->session);
+            $smsEnabled = $this->session->authwithsms === 'sms' ? true : false;
+            $isAuthorized = UserModel::authenticate($_POST['ucname'], $_POST['ucpwd'], $smsEnabled);
             if($isAuthorized === false) {
                 echo 3;
             } elseif ($isAuthorized instanceof UserModel) {
                 $appDisabled = UserSettingsModel::getByKeyGeneral('DisableApp');
+                $startHour = UserSettingsModel::getByKeyGeneral('StartHour');
+                $endHour = UserSettingsModel::getByKeyGeneral('EndHour');
+                $startHour = new \DateTime(date('Y-m-d ') . $startHour->TheValue);
+                $endHour = new \DateTime(date('Y-m-d ') . $endHour->TheValue);
+                $now = new \DateTime(date('Y-m-d H:i:s'));
                 if((int) $appDisabled->TheValue === 2 && (int) $isAuthorized->GroupId !== 4) {
                     echo 2;
+                } elseif((($now <= $startHour || $now >= $endHour) && (int) $isAuthorized->GroupId !== 4)) {
+                    echo 4;
                 } else {
+                    if($this->session->authwithsms === 'sms') {
+                        $this->language->load('auth.login');
+                        $this->language->swapKey('text_sms_code', [$isAuthorized->SMSCode]);
+                        $this->notifyBySMS($isAuthorized->PhoneNumber, $this->language->get('text_sms_code'));
+                    }
                     $this->session->tu = $isAuthorized;
                     echo 1;
                 }
+            } elseif ($isAuthorized == 2) {
+                echo 2;
+            }
+        }
+    }
+
+    public function checkSMSAction()
+    {
+        if(isset($_POST['ucname']) && isset($_POST['code'])) {
+            $isAuthorized = UserModel::checkSMS($this->filterString($_POST['ucname']), $this->filterInt($_POST['code']));
+            if($isAuthorized === 1) {
+                echo 1;
             } elseif ($isAuthorized == 2) {
                 echo 2;
             }

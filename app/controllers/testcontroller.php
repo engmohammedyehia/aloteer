@@ -2,28 +2,108 @@
 namespace PHPMVC\Controllers;
 
 use PHPMVC\Lib\Database\DatabaseHandler;
+use PHPMVC\Models\UserSettingsModel;
 
 class TestController extends AbstractController
 {
     public function defaultAction()
     {
-        $numbers = [1 => '',2 => '',3 => '',4 => '',5 => '',6 => '',7 => '',8 => '',9 => '',10 => '',11 => '', 12 => '',];
-        $number = '1';
-
-
-
-
-//        DatabaseHandler::factory()->exec('');
-//        $str = 'ABCDEFG';
+//        $a = [1,2,3,4,5];
+//        function getMaxSubArrayLength($a, $k) {
 //
-//        for ( $i = 0, ($ii = strlen($str) - 1); $i <= $ii; $i++) {
-//            $left = $str[$i];
-//            $right = $str[$ii];
-//            $str[$i] = $right;
-//            $str[$ii] = $left;
-//            $ii--;
+//            $subArrays = [];
+//            $counter = 0;
+//
+//            for ( $aCount = count($a), $i = $aCount; $i > 0; $i-- ) {
+//                $numberOfArraysToExtract = ($aCount - $i) + 1;
+//                while ( $numberOfArraysToExtract > $counter ) {
+//                    $arr = [];
+//                    for ($j = $counter; $j < $i + $counter; $j++ ) {
+//                        $arr[] = $a[$j];
+//                    }
+//                    $subArrays[] = $arr;
+//                    $counter++;
+//                }
+//                $counter = 0;
+//            }
+//
+//            $foundSubArrays = [];
+//
+//            foreach ($subArrays as $subArray) {
+//                if (array_sum($subArray) <= $k) {
+//                    $foundSubArrays[] = count($subArray);
+//                }
+//            }
+//
+//            return max($foundSubArrays);
 //        }
 //
-//        echo $str;
+//        echo getMaxSubArrayLength($a, 12);
+
+        $str = <<<EOT
+
+<!DOCTYPE html><!--[if IE 8]><html class="lt-ie9"><![endif]--><!--[if IE 9]><html class="lt-ie10"><![endif]--><!--[if gt IE 9]><!--><html lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="distribution" content="Global"/><meta name="rating" content="General"/><meta name="copyright" content="&copy; 2018 Security Compass"/><meta name="classification" content="Application Security"/><meta name="robots" content="NOODP"><meta name="author" content="Security Compass"/><meta property="og:type" content="website"/><meta property="og:title" content="OWASP Top 10 Free CBT"/><meta property="og:image" content="https://www.securitycompass.com/assets/img/opengraph/security-compass-default.jpg"/><meta property="og:site_name" content="Security Compass"/><meta property="Og:url" content="/training/free/course-demos/"/><title>OWASP Top 10 Free CBT &middot; Security Compass</title><meta name="keywords" content="Application Security, SDLC, Secure Software Development Life Cycle, Secure Application Lifecycle Management, SALM, Common Weakness Enumeration, CWE, Software, Threat Modeling, Risk Analysis, Enterprise Software, iOS Development, Java, Ruby on Rails, Python, django, PHP, XSS, SQL Injection
+"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/><link rel="shortcut icon" type="image/png" href="/assets/favicon.ico"/><link rel="stylesheet" type="text/css" href="/assets/js/vendor/Shifter/jquery.fs.shifter.css"/><link rel="canonical" href="https://www.securitycompass.com/training/free/course-demos/"/><link rel="stylesheet" type="text/css" href="/assets/css/style.css?ver=1524061149"/><!--[if lte IE 8]>
+            <script src="/assets/shim/html5shiv.js" type="text/javascript"></script>
+            <script src="/assets/shim/selectivizr.js" type="text/javascript"></script>
+            <script src="/assets/shim/respond.js" type="text/javascript"></script>
+        <![endif]--><!--[if lte IE 9]>
+            <script src="/assets/shim/placeholder.js" type="text/javascript"></script>
+            <script src="/assets/shim/listener.js" type="text/javascript"></script>
+            <script type="text/javascript">
+            $(function() {
+                $('input[placeholder], textarea[placeholder]').each(function() {
+                    $(this).placeholder();
+                });
+            });
+            </script>
+        <![endif]--><!--[if IE 8]>
+            <script src="/assets/shim/matchMedia.ie8.js" type="text/javascript"></script>
+        <![endif]--><!--[if IE 9]>
+            <script src="/assets/shim/matchMedia.ie9.js" type="text/javascript"></script>
+        <![endif]--><script type="text/javascript">!function(e,c,o,t,n,a,g,m){var l={ak:"876751569",cl:"vpOlCIqb33cQ0dWIogM",autoreplace:"1.888.777.2211"};e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[n]||(e[n]=l.ak),g=c.createElement(a),g.async=1,g.src="//www.gstatic.com/wcm/loader.js",m=c.getElementsByTagName(a)[0],m.parentNode.insertBefore(g,m),e[t]=function(c,t,n){e[o](2,c,l,t,null,new Date,n)},e[t]()}(window,document,"_googWcmImpl","_googWcmGet","_googWcmAk","script")</script><script async src="https://www.googletagmanager.com/gtag/js?id=DC-8102082"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","DC-8102082")</script></head><body class="page-freecbt shifter"><script type="text/javascript">!function(){function e(e){if(e){var t=new XMLHttpRequest;return t.open("HEAD",e,!1),t.send(),200==t.status}return!1}var t="/assets/js/freecbt.combined.js";if(0!=e(t))var n=[t];else if("undefined"==typeof n)var n=["/assets/js/common.combined.js"];for(a=0;a<n.length;a++){var s=document.createElement("script");s.type="text/javascript",s.async=!0,s.src=n[a];var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(s,r)}}()</script><style>.jvFloat {
+                position: relative;
+                display: block;
+                margin-top: 1em;
+            }
+
+            .jvFloat .placeHolder.required {
+                color: red;
+            }
+
+            /* Start CSS3 Animations on supported browser */
+            .jvFloat .placeHolder {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: auto;
+                color: #0c61fc;
+                font-size: .8em;
+                font-weight: bold;
+                -webkit-transform: translate(0, 0);
+                -moz-transform: translate(0, 0);
+                -o-transform: translate(0, 0);
+                -ms-transform: translate(0, 0);
+                transform: translate(0, 0);
+                -webkit-transition: -webkit-transform 150ms, opacity 100ms, visibility 100ms;
+                transition: transform 150ms, opacity 100ms, visibility 100ms;
+                opacity: 0;
+                visibility: hidden;
+            }
+            .jvFloat .placeHolder.active {
+                display: block;
+                visibility: visible;
+                -webkit-transform: translate(0, -1em);
+                -moz-transform: translate(0, -1em);
+                -o-transform: translate(0, -1em);
+                -ms-transform: translate(0, -1em);
+                transform: translate(0, -1em);
+                -webkit-transition: -webkit-transform 100ms, opacity 120ms, visibility 120ms;
+                transition: transform 100ms, opacity 120ms, visibility 120ms;
+                opacity: 1;
+            }</style><script>conversionTag="https://ad.doubleclick.net/ddm/adj/N7050.197812.NSO.CODESRV/B20174486.202678843;sz=1x2;ord=";var randomNumber=Math.floor(1e12*Math.random()+1),scriptTag=document.createElement("script");scriptTag.src=conversionTag+randomNumber+"?",scriptTag.language="JavaScript1.1";var insertionNode=document.body.firstChild;insertionNode.parentNode.insertBefore(scriptTag,insertionNode)</script><script type="text/javascript">var axel=Math.random()+"",a=1e13*axel;document.write('<iframe src="https://8102082.fls.doubleclick.net/activityi;src=8102082;type=ret01;cat=land01;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord='+a+'?" width="1" height="1" frameborder="0" style="display:none"></iframe>')</script><noscript><iframe src="https://8102082.fls.doubleclick.net/activityi;src=8102082;type=ret01;cat=land01;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe></noscript><script type="text/javascript" id="DoubleClickFloodlightTag">function recordButtonClickABC(){var t=Math.random()+"",c=1e16*t,d=new Image;d.src="https://8102082.fls.doubleclick.net/activityi;src=8102082;type=conv01;cat=frmld01;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord=1;num="+c+"?"}</script><noscript><iframe src="https://8102082.fls.doubleclick.net/activityi;src=8102082;type=conv01;cat=frmld01;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord=1;num=1?" width="1" height="1" frameborder="0" style="display:none"></iframe></noscript><script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount",""]),_gaq.push(["_trackPageview"]),function(e,a,t,n,c,g,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,g=a.createElement(t),s=a.getElementsByTagName(t)[0],g.async=1,g.src=n,s.parentNode.insertBefore(g,s)}(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-1680692-1","auto"),ga("send","pageview")</script><a href="https://plus.google.com/+Securitycompassx" rel="publisher" title="Security Compass' Google Plus page"></a><div id="skrollr-body" class="sde-global"><div class="shifter-page"><section class="sde-section sde-section-alt"><div class="container"><header class="sde-section-header"><h2 class="sde-section-heading sc-section-heading">Computer Based Training</h2><h3 class="sde-section-subheading sc-section-subheading">5 Free Modules from OWASP Top 10 2013</h3></header><div class="row sc-owasp-infolinks" style="background: #ddd; margin-bottom: 20px; padding: 15px; text-align: center"><div class="col-sm-8"><p><a href="https://www.isc2.org/uploadedfiles/%28isc%292_member_content/cpes/cpe_guidelines.pdf">Policy and guidelines for CPE Credits</a><br/><a href="https://support.securitycompass.com/knowledgebase/articles/487933-how-do-i-claim-cpe-credits-from-the-free-owasp-mod">Claim your CPE credits online!</a></p></div><div class="col-sm-8"><p><a href="https://community.articulate.com/series/articulate-mobile-player">Help/Tutorial with the articulate mobile player</a></p></div></div><div class="sc-learning-library"><ul class="sc-bundle-list"><li class="sc-polaroid"><img class="img-responsive" src="/assets/img/cbt/thumb_sqli.png"/><div class="sc-path-bundle-info row"><div class="col-xs-16 sc-learning-course-info"><p class="sc-path-info-sub">OWASP Top 5</p><p class="sc-path-info-main">SQL Injection</p></div></div><ul class="sc-learning-dialog nav-justified nav"><li class="sc-learning-dialog-item"><a href="./modules/top5/SQLi/story.html" class="sc-learning-dialog-link">View Course</a></li></ul></li><li class="sc-polaroid"><img class="img-responsive" src="/assets/img/cbt/thumb_XSS.png"/><div class="sc-path-bundle-info row"><div class="col-xs-16 sc-learning-course-info"><p class="sc-path-info-sub">OWASP Top 5</p><p class="sc-path-info-main">Cross-site Scripting</p></div></div><ul class="sc-learning-dialog nav-justified nav"><li class="sc-learning-dialog-item"><a href="./modules/top5/XSS/story.html" class="sc-learning-dialog-link">View Course</a></li></ul></li><li class="sc-polaroid"><img class="img-responsive" src="/assets/img/cbt/thumb_brokenauthentication.png"/><div class="sc-path-bundle-info row"><div class="col-xs-16 sc-learning-course-info"><p class="sc-path-info-sub">OWASP Top 5</p><p class="sc-path-info-main">Broken Authentication and Session Management</p></div></div><ul class="sc-learning-dialog nav-justified nav"><li class="sc-learning-dialog-item"><a href="./modules/top5/BrokenAuthenticationandSessionManagement/story.html" class="sc-learning-dialog-link">View Course</a></li></ul></li><li class="sc-polaroid"><img class="img-responsive" src="/assets/img/cbt/thumb_insecureconfig.png"/><div class="sc-path-bundle-info row"><div class="col-xs-16 sc-learning-course-info"><p class="sc-path-info-sub">OWASP Top 5</p><p class="sc-path-info-main">Insecure Configuration</p></div></div><ul class="sc-learning-dialog nav-justified nav"><li class="sc-learning-dialog-item"><a href="./modules/top5/Insecure_Configuration/story.html" class="sc-learning-dialog-link">View Course</a></li></ul></li><li class="sc-polaroid"><img class="img-responsive" src="/assets/img/cbt/thumb_idor.png"/><div class="sc-path-bundle-info row"><div class="col-xs-16 sc-learning-course-info"><p class="sc-path-info-sub">OWASP Top 5</p><p class="sc-path-info-main">Insecure Direct Object References</p></div></div><ul class="sc-learning-dialog nav-justified nav"><li class="sc-learning-dialog-item"><a href="./modules/top5/Insecure_Direct_Object_References/story.html" class="sc-learning-dialog-link">View Course</a></li></ul></li></ul></div><p>Thank you for signing up to receive our free modules. You can access our 5 free modules below from our popular eLearning offering for the OWASP Top 10 2013.</p><p>Our eLearning is also available on iPad/Tablet devices and available to download for offline use for free. Start by clicking on the first module for more info.</p><p>If you'd like to learn more about courses for <a href="https://security-compass.myshopify.com/">Personal</a> use, or <a href="/training/enterprise/">Enterprise teams</a>, please follow the links to learn more.</p><p>You can claim your CPE credits through (ISC)2 by self-reporting on the membership page. You can view the CPE policy by following <a href="https://support.securitycompass.com/knowledgebase/articles/487933-how-do-i-claim-cpe-credits-from-the-free-owasp-mod">this link</a>.</p></div></section><footer id="footer"><div class="container"><p>Copyright &copy; 2018 Security Compass&nbsp;<br class="visible-xs"/>All Rights Reserved.<br/>257 Adelaide Street West, Suite 500 <span class="hidden-xs hidden-sm">,</span><br class="visible-xs"/>Toronto ON, Canada, M5H 1X9<br/><a href="tel:+18887772211" class="tel">1.888.777.2211</a> <span class="separator hidden-xs hidden-sm">|</span><br class="visible-sm"/><a href="mailto:info@securitycompass.com">info@securitycompass.com</a> <span class="separator">|</span> <a href="/privacy/">Privacy Policy</a> <span class="separator">|</span> <a href="/compliance/">Accessibility</a></p></div></footer></div><header class="sc-navigation-header"><button type="button" class="sc-hamburger navbar-toggle shifter-handle hidden-lg hidden-md"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <button class="sc-hamburger-label navbar-toggle shifter-handle hidden-lg hidden-md" type="button">Menu</button> <a href="/contact/" class="sc-header-jobs-link hidden-lg hidden-md">Contact Us!</a> <span class="sc-navigation-logo hidden-lg hidden-md"><a href="/"><img src="/assets/img/mobile/logos/securitycompass-v2/security-compass-logo-nav.png?ver=1.0" class="lazyload" alt="Security Compass Logo"></a></span><nav class="sc-topnav hidden-xs hidden-sm"><ul class="sc-navigation-menu"><li class="sc-navigation-logo"><a href="/"><img src="/assets/img/logos/securitycompass-v2/security-compass-logo-nav.png?ver=1.0" alt="Security Compass Logo"></a></li><li class="sc-topnav-item"><a href="/about/">About</a></li><li class="sc-topnav-item"><a href="/advisory/"><span class="sc-navigation-label">Advisory</span></a></li><li class="sc-topnav-item"><a href="/sdelements/"><span class="sc-navigation-label">SD Elements</span></a></li><li class="sc-topnav-item"><a href="/training/"><span class="sc-navigation-label">Training</span></a></li><li class="sc-topnav-item cswp"><a href="/resources/"><span class="sc-navigation-label">Resources</span></a></li><li class="sc-topnav-item"><a href="https://blog.securitycompass.com/" target="_blank"><span class="sc-navigation-label">Blog <i class="fa fa-external-link"></i></span></a></li><li class="sc-topnav-item"><a href="/careers/#job-listing"><span class="sc-navigation-label">Careers</span></a></li><li><a href="/contact/" class="sc-header-jobs-link"><span class="sc-navigation-label">Contact Us!</span></a></li></ul></nav></header><nav class="sc-navigation shifter-navigation"><span class="sc-navigation-big-logo"><a href="/"><img src="/assets/img/mobile/logos/securitycompass-v2/security-compass-logo-nav.png?ver=1.0" class="lazyload" alt="Security Compass Logo"></a></span><ul class="sc-navigation-menu"><li class="sc-navigation-item has-subnavigation"><a href="/about/"><i class="fa fa-exclamation-circle sc-navigation-icon"></i> <span class="sc-navigation-label">About</span> <span class="sc-navigation-open-subnav"><i class="fa fa-chevron-down sc-navigation-drop-indicator"></i></span></a><div class="sc-subnavigation"><div class="sc-navigation-meta"><span class="sc-navigation-heading">About us</span><p>Who we are and what we do.</p></div><ul class="sc-subnavigation-menu"><li class="sc-subnavigation-item"><a href="/about/"><span class="sc-navigation-label">Our Profile</span></a></li><li class="sc-subnavigation-item"><a href="/careers/"><span class="sc-navigation-label">Working Here</span></a></li></ul></div></li><li class="sc-navigation-item has-subnavigation"><a href="/advisory/"><i class="fa fa-gears sc-navigation-icon"></i> <span class="sc-navigation-label">Advisory</span> <span class="sc-navigation-open-subnav"><i class="fa fa-chevron-down sc-navigation-drop-indicator"></i></span></a><div class="sc-subnavigation"><div class="sc-navigation-meta"><span class="sc-navigation-heading">Advisory</span><p>We are your guide to planning, assessing, and helping you build secure information systems to keep your business productive.</p></div><ul class="sc-subnavigation-menu"><li class="sc-subnavigation-item"><a href="/advisory/"><span class="sc-navigation-label">Overview</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/industries/financial-services/"><span class="sc-navigation-label">Financial Services Industry Consulting</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/industries/technology/"><span class="sc-navigation-label">Technology Industry Consulting</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/industries/retail/"><span class="sc-navigation-label">Retail Industry Consulting</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/services/advisory/"><span class="sc-navigation-label">Security Advisory Services</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/services/verification/"><span class="sc-navigation-label">Security Verification Services</span></a></li><li class="sc-subnavigation-item"><a href="/advisory/people/"><span class="sc-navigation-label">Our People</span></a></li></ul></div></li><li class="sc-navigation-item has-subnavigation"><a href="/sdelements/"><i class="sc-navigation-icon sc-navigation-icon-atom"></i> <span class="sc-navigation-label">SD Elements</span> <span class="sc-navigation-open-subnav"><i class="fa fa-chevron-down sc-navigation-drop-indicator"></i></span></a><div class="sc-subnavigation"><div class="sc-navigation-meta"><span class="sc-navigation-heading">SD Elements</span><p>Build security requirements into the earliest stage of your SDLC.</p></div><ul class="sc-subnavigation-menu"><li class="sc-subnavigation-item"><a href="/sdelements/#!/overview/"><span class="sc-navigation-label">Overview</span></a></li><li class="sc-subnavigation-item"><a href="/sdelements/how-it-works/"><span class="sc-navigation-label">How it Works</span></a></li><li class="sc-subnavigation-item"><a href="/sdelements/product-features/"><span class="sc-navigation-label">Product Features</span></a></li><li class="sc-subnavigation-item"><a href="/sdelements/faq/"><span class="sc-navigation-label">FAQ</span></a></li></ul></div></li><li class="sc-navigation-item has-subnavigation"><a href="/training/"><i class="sc-navigation-icon sc-navigation-icon-presentation"></i> <span class="sc-navigation-label">Training</span> <span class="sc-navigation-open-subnav"><i class="fa fa-chevron-down sc-navigation-drop-indicator"></i></span></a><div class="sc-subnavigation"><div class="sc-navigation-meta"><span class="sc-navigation-heading">Training</span></div><ul class="sc-subnavigation-menu"><li class="sc-subnavigation-item"><a href="/training/"><span class="sc-navigation-label">Overview</span></a></li><li class="sc-subnavigation-item"><a href="/training/enterprise/"><span class="sc-navigation-label">Enterprise</span></a></li><li class="sc-subnavigation-item"><a href="/training/#!/free"><span class="sc-navigation-label">Free OWASP Top 10</span></a></li></ul></div></li><li class="sc-navigation-item"><a href="/resources/" title=""><img class="sc-navigation-icon lazyload" src="/assets/img/mobile/art/cswp-icon.png?ver=1.0" alt="some papers and a magnifying glass"/> <span class="sc-navigation-label">Resources</span></a></li><li class="sc-navigation-item"><a href="https://blog.securitycompass.com/" target="_blank"><i class="sc-navigation-icon sc-navigation-icon-blog"></i> <span class="sc-navigation-label">Blog <i class="fa fa-external-link"></i></span></a></li><li class="sc-navigation-item"><a href="/contact/"><i class="fa fa-envelope sc-navigation-icon"></i> <span class="sc-navigation-label">Contact</span></a></li><li class="sc-navigation-item"><a href="/careers/#job-listing"><i class="fa fa-users sc-navigation-icon"></i> <span class="sc-navigation-label">Careers</span></a></li></ul></nav></div><a href="https://plus.google.com/+Securitycompassx" rel="publisher" title="Security Compass' Google Plus page"></a><script type="text/javascript"></script><script type="text/javascript">piAId="139371",piCId="3598",function(){function t(){var t=document.createElement("script");t.type="text/javascript",t.src=("https:"==document.location.protocol?"https://pi":"http://cdn")+".pardot.com/pd.js";var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(t,e)}window.attachEvent?window.attachEvent("onload",t):window.addEventListener("load",t,!1)}();var sf14gv=29114;!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"==document.location.protocol?"https://":"http://")+"t.sf14g.com/sf14g.js";var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(t,e)}()</script><script type="text/javascript">_linkedin_data_partner_id="21689"</script><script type="text/javascript">!function(){var t=document.getElementsByTagName("script")[0],e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="https://snap.licdn.com/li.lms-analytics/insight.min.js",t.parentNode.insertBefore(e,t)}()</script></body></html>
+
+EOT;
+        var_dump ((bool) preg_match('/ga\s*\(\s*[\'"]create[\'"],\s*[\'"]UA-\d+/i', $str) === true);
     }
 }

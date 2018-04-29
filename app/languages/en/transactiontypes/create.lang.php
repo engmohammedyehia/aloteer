@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'إنشاء صلاحية جديدة';
+$_['title'] = 'Create a new transaction type';

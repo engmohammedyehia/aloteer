@@ -4,18 +4,22 @@ namespace PHPMVC\Controllers;
 use PHPMVC\LIB\Messenger;
 use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
+use PHPMVC\Lib\Tafqeet\Tafqeet;
 use PHPMVC\Models\AuditAssignmentResultModel;
 use PHPMVC\Models\AuditModel;
 use PHPMVC\Models\BankAccountModel;
+use PHPMVC\Models\BankBranchModel;
 use PHPMVC\Models\BranchModel;
 use PHPMVC\Models\ChequeDeletedModel;
 use PHPMVC\Models\ChequeModel;
 use PHPMVC\Models\ClientModel;
+use PHPMVC\Models\NotificationModel;
 use PHPMVC\Models\TransactionConditionModel;
 use PHPMVC\Models\TransactionModel;
 use PHPMVC\Models\TransactionStatusModel;
 use PHPMVC\Models\TransactionTypeModel;
 use PHPMVC\Models\UserModel;
+use PHPMVC\Models\UserProfileModel;
 
 class ChequesController extends AbstractController
 {
@@ -88,7 +92,7 @@ class ChequesController extends AbstractController
     {
         $this->language->load('template.common');
         $this->language->load('cheques.default');
-        $this->language->load('cheques.canceled');
+        $this->language->load('cheques.obsoleted');
         $this->language->load('transactions.status');
 
         $this->_data['orders'] = ChequeModel::getObsoletedCheques();
@@ -139,14 +143,21 @@ class ChequesController extends AbstractController
             $cheque->ClientId = ClientModel::getByPK($transaction->ClientId)->id;
             $cheque->AccountId = $this->filterInt($_POST['AccountId']);
             $cheque->Amount = $this->filterInt($_POST['Amount']);
-            $cheque->AmountLiteral = $this->filterString($_POST['AmountLiteral']);
+
+            $numToStr = new Tafqeet('Numbers');
+            $numToStr->setFeminine(2);
+            $numToStr->setFormat(1);
+            $cheque->AmountLiteral = $numToStr->int2str($cheque->Amount);
+
             $cheque->Status = ChequeModel::CHEQUE_ORDER_CREATED;
-            $cheque->Created = date('Y-m-d H:i:s');
+            $cheque->Created = $this->startup->_hijri_;
+            $cheque->CreatedJ = date('Y-m-d H:i:s');
             $cheque->UserId = $this->filterInt($_POST['UserId']);
             $cheque->ClientName = ($_POST['ClientName'] === '') ? ClientModel::getByPK($cheque->ClientId)->name : $this->filterString($_POST['ClientName']);
             $cheque->Reason = $this->filterString($_POST['Reason']);
             $cheque->ChequeNumber = $this->filterString($_POST['ChequeNumber']);
             $cheque->BranchId = $this->filterInt($_POST['BranchId']);
+            $cheque->handedToTheFirstBeneficier = isset($_POST['handedToTheFirstBeneficier']) ? true : false;
 
             if($cheque->save()) {
 
@@ -154,8 +165,12 @@ class ChequesController extends AbstractController
                 $status->UserId = $cheque->UserId;
                 $status->TransactionId = $transaction->TransactionId;
                 $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_ORDERED;
-                $status->Created = date('Y-m-d H:i:s');
+                $status->Created = $this->startup->_hijri_;
                 $status->save();
+
+                $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+                $chequeUser = UserProfileModel::getByPK($cheque->UserId);
+                NotificationModel::sendNotification($users, 'text_notification_5', serialize([$transaction->TransactionTitle, ($chequeUser->FirstName . ' ' . $chequeUser->LastName)]), 'javascript:;');
 
                 $this->messenger->add($this->language->get('message_save_success'));
                 $this->redirect('/transactions');
@@ -197,14 +212,21 @@ class ChequesController extends AbstractController
         ) {
             $cheque->AccountId = $this->filterInt($_POST['AccountId']);
             $cheque->Amount = $this->filterInt($_POST['Amount']);
-            $cheque->AmountLiteral = $this->filterString($_POST['AmountLiteral']);
+
+            $numToStr = new Tafqeet('Numbers');
+            $numToStr->setFeminine(2);
+            $numToStr->setFormat(1);
+            $cheque->AmountLiteral = $numToStr->int2str($cheque->Amount);
+
             $cheque->Status = ChequeModel::CHEQUE_ORDER_CREATED;
-            $cheque->Created = date('Y-m-d H:i:s');
+            $cheque->Created = $this->startup->_hijri_;
+            $cheque->CreatedJ = date('Y-m-d');
             $cheque->UserId = $this->filterInt($_POST['UserId']);
             $cheque->ClientName = ($_POST['ClientName'] === '') ? ClientModel::getByPK($cheque->ClientId)->name : $this->filterString($_POST['ClientName']);
             $cheque->Reason = $this->filterString($_POST['Reason']);
             $cheque->ChequeNumber = $this->filterString($_POST['ChequeNumber']);
             $cheque->BranchId = $this->filterInt($_POST['BranchId']);
+            $cheque->handedToTheFirstBeneficier = isset($_POST['handedToTheFirstBeneficier']) ? true : false;
 
             if($cheque->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
@@ -293,8 +315,13 @@ class ChequesController extends AbstractController
             $status->UserId = $cheque->UserId;
             $status->TransactionId = $cheque->TransactionId;
             $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTING;
-            $status->Created = date('Y-m-d H:i:s');
+            $status->Created = $this->startup->_hijri_;
             $status->save();
+
+            $transaction = TransactionModel::getByPK($cheque->TransactionId);
+            $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+            $chequeUser = UserProfileModel::getByPK($cheque->UserId);
+            NotificationModel::sendNotification($users, 'text_notification_6', serialize([$cheque->ChequeNumber, ($chequeUser->FirstName . ' ' . $chequeUser->LastName)]), 'javascript:;');
 
             $this->messenger->add($this->language->get('message_print_success'));
             $this->redirect('/cheques/printing');
@@ -342,11 +369,15 @@ class ChequesController extends AbstractController
                 $status->UserId = $cheque->UserId;
                 $status->TransactionId = $cheque->TransactionId;
                 $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_PRINTED;
-                $status->Created = date('Y-m-d H:i:s');
+                $status->Created = $this->startup->_hijri_;
                 $status->save();
 
+                $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+                $chequeUser = UserProfileModel::getByPK($cheque->UserId);
+                NotificationModel::sendNotification($users, 'text_notification_7', serialize([($chequeUser->FirstName . ' ' . $chequeUser->LastName), $cheque->ChequeNumber, $transaction->TransactionTitle]), 'javascript:;');
+
                 $this->messenger->add($this->language->get('message_printed_success'));
-                $this->redirect('/cheques/printed');
+                $this->redirect('/cheques/handoverinvoice/' . $cheque->ChequeId);
             } else {
                 $this->messenger->add($this->language->get('message_printed_failed'), Messenger::APP_MESSAGE_ERROR);
             }
@@ -375,8 +406,12 @@ class ChequesController extends AbstractController
             $status->UserId = $this->session->u->UserId;
             $status->TransactionId = $cheque->TransactionId;
             $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_HANDED_TO_CLIENT;
-            $status->Created = date('Y-m-d H:i:s');
+            $status->Created = $this->startup->_hijri_;
             $status->save();
+
+            $transaction = TransactionModel::getByPK($cheque->TransactionId);
+            $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+            NotificationModel::sendNotification($users, 'text_notification_11', serialize([$cheque->ChequeNumber, $cheque->ClientName, ($this->session->u->profile->FirstName . ' ' . $this->session->u->profile->LastName)]), 'javascript:;');
 
             $this->messenger->add($this->language->get('message_handover_success'));
 
@@ -406,8 +441,12 @@ class ChequesController extends AbstractController
             $status->UserId = $this->session->u->UserId;
             $status->TransactionId = $cheque->TransactionId;
             $status->StatusType = TransactionStatusModel::STATUS_TRANSACTION_CHEQUE_CLEARED;
-            $status->Created = date('Y-m-d H:i:s');
+            $status->Created = $this->startup->_hijri_;
             $status->save();
+
+            $transaction = TransactionModel::getByPK($cheque->TransactionId);
+            $users = TransactionStatusModel::exportTransactionUsers($transaction, $this->session->u);
+            NotificationModel::sendNotification($users, 'text_notification_12', serialize([$cheque->ChequeNumber]), 'javascript:;');
 
             $this->messenger->add($this->language->get('message_clear_success'));
             $this->redirect('/cheques/cleared');
@@ -436,7 +475,7 @@ class ChequesController extends AbstractController
             $deletedCheuqe->Amount = $cheque->Amount;
             $deletedCheuqe->AmountLiteral = $cheque->AmountLiteral;
             $deletedCheuqe->Status = $cheque->Status;
-            $deletedCheuqe->Created = date('Y-m-d H:i:s');
+            $deletedCheuqe->Created = $this->startup->_hijri_;
             $deletedCheuqe->UserId = $cheque->UserId;
             $deletedCheuqe->ClientName = $cheque->ClientName;
             $deletedCheuqe->Reason = $cheque->Reason;
@@ -449,5 +488,42 @@ class ChequesController extends AbstractController
         } else {
             $this->messenger->add($this->language->get('message_cancel_failed'), Messenger::APP_MESSAGE_ERROR);
         }
+    }
+
+    public function handOverInvoiceAction()
+    {
+        $chequeId = (int) $this->filterInt(@$this->_params[0]);
+        $cheque = ChequeModel::getByPK($chequeId);
+
+        if($cheque === false) {
+            $this->redirect('/cheques/default');
+        }
+
+        $this->language->load('cheques.messages');
+
+        $cheque->Status = ChequeModel::CHEQUE_ORDER_PRINTED;
+
+        $this->language->load('template.common');
+        $this->language->load('cheques.labels');
+        $this->language->load('cheques.handoverinvoice');
+
+        $transaction = TransactionModel::getByPK($cheque->TransactionId);
+
+        $this->_data['TransactionTitle'] = $transaction->TransactionTitle;
+        $this->_data['BranchName'] = BranchModel::getByPK($cheque->BranchId)->BranchName;
+
+        $this->language->swapKey('title', [$cheque->ChequeNumber]);
+
+        $this->_data['cheque'] = ChequeModel::getByPK($chequeId);
+        $this->_data['bankAccount'] = BankAccountModel::getByPK($cheque->AccountId);
+        $this->_data['bankAccountBranch'] = BankBranchModel::getByPK($this->_data['bankAccount']->BankBranchId);
+        $this->_data['branch'] = BranchModel::getByPK($cheque->BranchId);
+
+        if(isset($_POST['submit'])) {
+
+            $this->redirect('/cheques/printed');
+        }
+
+        $this->_view();
     }
 }

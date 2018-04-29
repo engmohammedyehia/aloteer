@@ -30,3 +30,5 @@ $_['text_table_control_signature_request'] = 'طلب توقيعات الموظف
 $_['text_table_control_confirm_cheque_ready'] = 'اعتماد الشيك للصرف';
 $_['text_table_control_close'] = 'إغلاق المعاملة';
 $_['text_table_control_close_confirm'] = 'هل تود فعلا إغلاق المعاملة؟';
+$_['text_table_control_correction'] = 'تصحيح المعاملة';
+$_['text_table_control_correction_confirm'] = 'هل انت متاكد من اتمامك تصحيح المعاملة؟';

@@ -6,7 +6,6 @@ $_['message_delete_success'] = 'تم حذف المستخدم بنجاح';
 $_['message_delete_failed'] = 'خطأ في حذف المستخدم';
 $_['message_user_exists'] = 'المستخدم مسجل بالفعل';
 $_['message_email_exists'] = 'البريد الالكتروني مسجل بالفعل';
-$_['message_email_exists'] = 'البريد الالكتروني مسجل بالفعل';
 $_['message_reset_success'] = 'تم تعيين كلمة مرور افتراضية و هي 123456 بنجاح';
 $_['message_reset_failed'] = 'خطأ في تعيين كلمة المرور الإفتراضية';
 $_['message_suspend_success'] = 'تم إيقاف حساب المستخدم بنجاح';

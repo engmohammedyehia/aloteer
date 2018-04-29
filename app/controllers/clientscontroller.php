@@ -1,6 +1,7 @@
 <?php
 namespace PHPMVC\Controllers;
 
+use PHPMVC\lib\FileUpload;
 use PHPMVC\LIB\Messenger;
 use PHPMVC\LIB\Helper;
 use PHPMVC\LIB\InputFilter;
@@ -60,6 +61,18 @@ class ClientsController extends AbstractController
             $client->city = $this->filterString(@$_POST['city']);
             $client->zip_code = $this->filterString(@$_POST['zip_code']);
             $client->created = date('Y-m-d');
+            $client->BankName = $this->filterString($_POST['BankName']);
+            $client->BankIBAN = $this->filterString($_POST['BankIBAN']);
+
+            if(!empty($_FILES['file']['name'])) {
+                $uploader = new FileUpload($_FILES['file']);
+                try {
+                    $uploader->upload();
+                    $client->CommercialRegistration = $uploader->getFileName();
+                } catch (\Exception $e) {
+                    $this->messenger->add($e->getMessage(), Messenger::APP_MESSAGE_ERROR);
+                }
+            }
 
             if($client->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));
@@ -106,6 +119,19 @@ class ClientsController extends AbstractController
             $client->pobox = $this->filterString(@$_POST['pobox']);
             $client->city = $this->filterString(@$_POST['city']);
             $client->zip_code = $this->filterString(@$_POST['zip_code']);
+            $client->BankName = $this->filterString($_POST['BankName']);
+            $client->BankIBAN = $this->filterString($_POST['BankIBAN']);
+
+            if(!empty($_FILES['file']['name'])) {
+                $uploader = new FileUpload($_FILES['file']);
+                try {
+                    $uploader->remove($client->CommercialRegistration);
+                    $uploader->upload();
+                    $client->CommercialRegistration = $uploader->getFileName();
+                } catch (\Exception $e) {
+                    $this->messenger->add($e->getMessage(), Messenger::APP_MESSAGE_ERROR);
+                }
+            }
 
             if($client->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));

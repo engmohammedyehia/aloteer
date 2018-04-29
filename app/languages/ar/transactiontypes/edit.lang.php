@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تعديل بيانات نوع معاملة';
+$_['title'] = 'Edit a transaction type';

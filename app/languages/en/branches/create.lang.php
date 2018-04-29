@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'إضافة فرع جديد';
+$_['title'] = 'Create a new branch';

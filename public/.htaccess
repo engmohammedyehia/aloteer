@@ -2,3 +2,6 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php
+
+RewriteCond $0 !=images/favicon.ico
+RewriteRule ^([^/]+/)*favicon\.ico$ /images/favicon.ico [L]

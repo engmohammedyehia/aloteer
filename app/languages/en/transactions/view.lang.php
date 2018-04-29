@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'عرض بيانات %s';
+$_['title'] = 'Viewing transaction %s';

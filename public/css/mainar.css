@@ -1038,7 +1038,8 @@ div.wrapper div.action_view form.appForm div.input_wrapper.padding input {
 }
 
 div.wrapper div.action_view form.appForm input[type=submit],
-div.wrapper div.action_view form.appForm button {
+div.wrapper div.action_view form.appForm button,
+button {
     width: 80px;
     font-size: 1em;
     color: #FFF;
@@ -1241,7 +1242,8 @@ div.login_box form div.border {
 div.login_box form input[type=text],
 div.login_box form input[type=email],
 div.login_box form input[type=password],
-div.login_box form input[type=submit] {
+div.login_box form input[type=submit],
+div.login_box form a#sms {
     border: solid 2px #f2f5f6;
     background: #f2f5f6;
     padding: 12px 10px 7px 10px;
@@ -1253,13 +1255,21 @@ div.login_box form input[type=submit] {
     transition: all 0.3s ease-in-out;
 }
 
+div.login_box form a#sms:link,
+div.login_box form a#sms:visited {
+    text-decoration: none;
+    text-align: center;
+}
+
 div.login_box form input[type=text],
 div.login_box form input[type=email],
 div.login_box form input[type=password] {
     padding-right: 35px;
 }
 
-div.login_box form input[type=submit] {
+div.login_box form input[type=submit],
+div.login_box form a#sms:link,
+div.login_box form a#sms:visited {
     background-color: #0077b5;
     color: #FFF;
     transition: all 0.3s ease-in-out;
@@ -1932,44 +1942,154 @@ div.cheque_print {
 
 div.cheque_print div.cheque_date {
     position: absolute;
-    top:22px;
-    right: 70px;
+    top:23px;
+    right: 85px;
+    font-family: Helvetica !important;
 }
 
 div.cheque_print div.cheque_number {
     position: absolute;
-    top:22px;
-    left: 100px;
+    bottom:45px;
+    left: 25px;
+    font-family: Helvetica !important;
+}
+
+div.cheque_print div.no_hand_to {
+    position: absolute;
+    top:65px;
+    left: 45px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.2em;
 }
 
 div.cheque_print div.cheque_branch {
     position: absolute;
-    top:57px;
-    right: 70px;
+    top:58px;
+    right: 85px;
+    font-family: Helvetica !important;
 }
 
 div.cheque_print div.cheque_client {
     position: absolute;
-    top:145px;
-    right: 250px;
+    top:139px;
+    right: 265px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
 }
 
 div.cheque_print div.cheque_amount {
     position: absolute;
-    top:230px;
+    top:220px;
     right: 75px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
 }
 
 div.cheque_print div.cheque_amount_literal {
     position: absolute;
-    top:206px;
-    right: 355px;
+    top:200px;
+    right: 370px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
 }
 
 div.cheque_print div.cheque_reason {
     position: absolute;
-    top:245px;
-    right: 270px;
+    top:235px;
+    right: 290px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print {
+    display: none;
+    width: 1000px;
+    height: 439px;
+    position: relative;
+}
+
+div.invoice_print div.cheque_branch {
+    position: absolute;
+    top:28px;
+    right: 835px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+div.invoice_print div.invoice_number {
+    position: absolute;
+    top:58px;
+    right: 835px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+div.invoice_print div.cheque_date {
+    position: absolute;
+    top:158px;
+    left: 85px;
+    font-family: Helvetica !important;
+}
+
+div.invoice_print div.cheque_amount {
+    position: absolute;
+    top:155px;
+    right: 85px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print div.cheque_client {
+    position: absolute;
+    top:205px;
+    right: 180px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print div.cheque_amount_literal {
+    position: absolute;
+    top:260px;
+    right: 180px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print div.cheque_number {
+    position: absolute;
+    top:298px;
+    right: 180px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print div.cheque_on_bank {
+    position: absolute;
+    top:339px;
+    right: 180px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.invoice_print div.cheque_reason {
+    position: absolute;
+    top:384px;
+    right: 180px;
+    font-family: Helvetica !important;
+    font-weight: bold;
+    font-size: 1.4em;
 }
 
 div.messageContainer div.message_tools {
@@ -2027,12 +2147,59 @@ td.read a {
     color: #666;
 }
 
+div.cover {
+    background: #FFF;
+    padding: 20px;
+    border: solid 1px #666;
+    position: relative;
+}
 
+div.cover div.transaction_date {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    border: solid 1px #666;
+    padding: 10px;
+}
 
+div.cover h1 {
+    font-family: "Neo Sans Arabic Bold" !important;
+    font-size: 1.3em;
+    text-align: center;
+    margin-top: 30px;
+}
 
+div.cover p {
+    text-align: center;
+    margin-top: 15px;
+}
 
+div.cover table {
+    margin-top: 20px;
+    width: 100%;
+    border: solid 1px #666;
+}
 
+div.cover table tr td {
+    padding: 30px 30px 5px 30px;
+}
 
+div.cover table tr td span.label {
+    font-family: "Neo Sans Arabic Medium" !important;
+}
+
+div.cover table tr td div.signature {
+    width: 15%;
+    box-sizing: border-box;
+    float: right;
+    text-align: center;
+    margin-left: 1%;
+}
+
+div.cover table tr td div.signature span {
+    display: block;
+    margin-bottom: 10px;
+}
 
 
 
@@ -2232,7 +2399,7 @@ td.read a {
         padding: 0;
     }
 
-    div.cheque_print {
+    div.cheque_print, div.invoice_print {
         display: block;
     }
 }

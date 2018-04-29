@@ -1,3 +1,3 @@
 <?php
 
-$_['title'] = 'تعديل بيانات %s';
+$_['title'] = 'Edit transaction %s';
