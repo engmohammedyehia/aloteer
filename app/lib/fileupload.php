@@ -15,7 +15,7 @@ class FileUpload
     public $hasError = false;
 
     private $allowedExtensions = [
-        'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls'
+        'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'txt'
     ];
 
     public function __construct(array $file)
