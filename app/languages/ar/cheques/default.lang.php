@@ -5,6 +5,7 @@ $_['text_table_transaction_title'] = 'عنوان المعاملة';
 $_['text_table_cheque_number'] = 'رقم الشيك';
 $_['text_table_client_name'] = 'المستفيد';
 $_['text_table_bank_name'] = 'حساب بنك';
+$_['text_table_branch_name'] = 'فرع';
 $_['text_table_amount'] = 'القيمة';
 $_['text_table_user_name'] = 'مسؤول الطباعة';
 $_['text_table_created'] = 'بتاريخ';

@@ -3,7 +3,8 @@
     <tr>
         <th><?= $text_table_cheque_number ?></th>
         <th><?= $text_table_client_name ?></th>
-        <th><?= $text_table_bank_name ?></th>
+        <th data-name="<?= $text_table_bank_name ?>"><?= $text_table_bank_name ?></th>
+        <th data-name="<?= $text_table_branch_name ?>"><?= $text_table_branch_name ?></th>
         <th><?= $text_table_amount ?></th>
         <th><?= $text_table_user_name ?></th>
         <th><?= $text_table_created ?></th>
@@ -19,6 +20,7 @@
                 <td><?= $order->ChequeNumber ?></td>
                 <td><?= $order->ClientName ?></td>
                 <td><?= $order->BankName ?> - <?= $order->BankBranchName ?></td>
+                <td><?= $order->BranchName ?></td>
                 <td><?= $order->Amount ?></td>
                 <td><?= $order->UserName ?></td>
                 <td><?= $order->Created ?></td>

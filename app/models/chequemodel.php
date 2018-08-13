@@ -69,11 +69,13 @@ class ChequeModel extends AbstractModel
     public static function getPrintingCheques()
     {
         return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
                   WHERE t1.Status = ' . self::CHEQUE_ORDER_PRINTING
 
         );
@@ -82,11 +84,13 @@ class ChequeModel extends AbstractModel
     public static function getPrintedCheques()
     {
         return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
                   WHERE (t1.Status = ' . self::CHEQUE_ORDER_PRINTED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED . ')'
 
         );
@@ -95,11 +99,13 @@ class ChequeModel extends AbstractModel
     public static function getHandedOverToClientCheques()
     {
         return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
                   WHERE t1.Status = ' . self::CHEQUE_ORDER_HANDED_TO_CLIENT
 
         );
@@ -108,11 +114,13 @@ class ChequeModel extends AbstractModel
     public static function getClearedCheques()
     {
         return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
                   WHERE t1.Status = ' . self::CHEQUE_ORDER_CLEARED
 
         );
@@ -121,11 +129,13 @@ class ChequeModel extends AbstractModel
     public static function getObsoletedCheques()
     {
         return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName,
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
                   WHERE t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED . ' AND (MONTH(CURRENT_DATE) - MONTH(t1.CreatedJ)) >= 6'
 
         );

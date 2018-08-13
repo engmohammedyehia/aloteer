@@ -5,6 +5,7 @@ $_['text_table_transaction_title'] = 'Transaction Title';
 $_['text_table_cheque_number'] = 'Cheque Number';
 $_['text_table_client_name'] = 'Beneficiary';
 $_['text_table_bank_name'] = 'Bank Account';
+$_['text_table_branch_name'] = 'Branch Name';
 $_['text_table_amount'] = 'Amount';
 $_['text_table_user_name'] = 'Print Man';
 $_['text_table_created'] = 'Date';

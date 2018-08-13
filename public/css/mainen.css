@@ -1270,6 +1270,20 @@ table.data tr th:last-child {
     width: 120px;
 }
 
+table.data tr th[data-name] {
+    padding: 0 !important;
+}
+
+table.data tr th select {
+    background: #8298ad;
+    color: white;
+    border: none;
+    padding: 7px;
+    width: 100px;
+    height: 30px;
+    outline: none;
+}
+
 table.data tr td {
     font-size: 0.85em;
     padding: 8px 5px 8px 10px;
