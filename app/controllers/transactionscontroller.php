@@ -93,6 +93,7 @@ class TransactionsController extends AbstractController
             $transaction->UserId = $this->session->u->UserId;
             $transaction->BranchId = $this->session->u->BranchId;
             $transaction->ProjectId = $this->filterInt($_POST['ProjectId']);
+            $transaction->Payment = $this->filterInt($_POST['Payment']);
             $transaction->Created = date('Y-m-d');
 
             if($transaction->save()) {
@@ -173,6 +174,7 @@ class TransactionsController extends AbstractController
             $transaction->TransactionSummary = $this->filterString(@$_POST['TransactionSummary']);
             $transaction->UpdatedBy = $this->session->u->UserId;
             $transaction->ProjectId = $this->filterInt($_POST['ProjectId']);
+            $transaction->Payment = $this->filterInt($_POST['Payment']);
 
             if($transaction->save()) {
                 $this->messenger->add($this->language->get('message_save_success'));

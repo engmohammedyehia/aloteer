@@ -6,6 +6,7 @@ $_['text_label_TransactionTypeId_select'] = 'Choose transaction type';
 $_['text_label_ClientId_select'] = 'Choose a beneficiary';
 $_['text_label_ProjectId_select'] = 'Choose related project';
 $_['text_label_TransactionSummary'] = 'Summary';
+$_['text_label_Payment'] = 'Payment';
 $_['text_legend'] = 'Approve cheque for clearance';
 $_['text_label_BankAccountState'] = 'Choose approval note';
 $_['text_label_BankAccountState_1'] = 'Cheque is ready for clearance';

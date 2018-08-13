@@ -9,6 +9,8 @@
         <th><?= $text_table_transaction_created ?></th>
         <th><?= $text_table_transaction_branch ?></th>
         <th><?= $text_table_transaction_client ?></th>
+        <th><?= $text_table_transaction_payment ?></th>
+        <th><?= $text_table_transaction_cheque ?></th>
         <th><?= $text_table_transaction_user ?></th>
         <th><?= $text_table_transaction_updated ?></th>
         <th><?= $text_table_transaction_updated_by ?></th>
@@ -28,6 +30,8 @@
                 <td><?= $transaction->Created ?></td>
                 <td><?= $transaction->BranchName ?></td>
                 <td><?= $transaction->ClientName ?></td>
+                <td><?= $transaction->Payment ?></td>
+                <td><?= $transaction->ChequeNumber ? $transaction->ChequeNumber : $text_table_transaction_cheque_no_issued ?></td>
                 <td><?= $transaction->UserName ?></td>
                 <td><?= (new \DateTime($transaction->Updated))->format('Y-m-d') ?></td>
                 <td><?= $transaction->UpdatingUser ?></td>

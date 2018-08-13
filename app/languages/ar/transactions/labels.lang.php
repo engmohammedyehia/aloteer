@@ -6,6 +6,7 @@ $_['text_label_TransactionTypeId_select'] = 'إختار نوع المعاملة'
 $_['text_label_ClientId_select'] = 'إختار العميل صاحب المعاملة';
 $_['text_label_ProjectId_select'] = 'إختار المشروع التابع له المعاملة';
 $_['text_label_TransactionSummary'] = 'ملخص المعاملة';
+$_['text_label_Payment'] = 'قيمة المعاملة';
 $_['text_legend'] = 'اعتماد الشيك للصرف';
 $_['text_label_BankAccountState'] = 'اختار حالة الصرف';
 $_['text_label_BankAccountState_1'] = 'يمكن صرف الشيك للعميل';
