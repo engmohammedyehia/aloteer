@@ -32,7 +32,7 @@ class FileUpload
     {
         preg_match_all('/([a-z]{1,4})$/i', $this->name, $m);
         $this->fileExtension = $m[0][0];
-        $name = substr(strtolower(base64_encode($this->name . APP_SALT)), 0, 30);
+        $name = substr(strtolower(sha1($this->name . APP_SALT . microtime())), 0, 30);
         $name = preg_replace('/(\w{6})/i', '$1_', $name);
         $name = rtrim($name, '_');
         $this->name = $name;

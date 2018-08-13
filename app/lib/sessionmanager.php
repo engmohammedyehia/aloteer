@@ -1,16 +1,24 @@
 <?php
 namespace PHPMVC\LIB;
 
+use PHPMVC\Models\UserModel;
+
+/**
+ * @property UserModel u
+ * @property CSRFSecHandler CSRFToken
+ * @property array messages
+ * @property string authwithsms
+ * @property bool|int|mixed|UserModel tu
+ */
 class SessionManager extends \SessionHandler
 {
 
     private $sessionName = SESSION_NAME;
     private $sessionMaxLifetime = SESSION_LIFE_TIME;
-    private $sessionSSL = true;
+    private $sessionSSL = false;
     private $sessionHTTPOnly = true;
     private $sessionPath = '/';
-    private $sessionDomain = '.madinahcheque.dev';
-    private $sessionSavePath = SESSION_SAVE_PATH;
+    private $sessionDomain = 'localhost';
 
     private $sessionCipherAlgo = 'AES-128-ECB';
     private $sessionCipherKey = 'WYCRYPT0K3Y@2016';
@@ -21,7 +29,7 @@ class SessionManager extends \SessionHandler
     {
 
         $this->sessionSSL = isset($_SERVER['HTTPS']) ? true : false;
-        $this->sessionDomain = str_replace('www.', '', $_SERVER['SERVER_NAME']);
+        $this->sessionDomain = (bool) preg_match('/www\./', $_SERVER['SERVER_NAME']) !== false ? str_replace('www.', '', $_SERVER['SERVER_NAME']) : $this->sessionDomain;
 
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 1);
@@ -30,21 +38,22 @@ class SessionManager extends \SessionHandler
 
         session_name($this->sessionName);
 
-        session_save_path($this->sessionSavePath);
+        session_set_save_handler($this, true);
 
         session_set_cookie_params(
-            $this->sessionMaxLifetime, $this->sessionPath,
-            $this->sessionDomain, $this->sessionSSL,
+            $this->sessionMaxLifetime,
+            $this->sessionPath,
+            $this->sessionDomain,
+            $this->sessionSSL,
             $this->sessionHTTPOnly
         );
-
-//        session_set_save_handler($this, true);
     }
 
-    public function __get($key) {
-        if(isset($_SESSION[$key])) {
+    public function __get($key)
+    {
+        if (isset($_SESSION[$key])) {
             $data = @unserialize($_SESSION[$key]);
-            if($data === false) {
+            if ($data === false) {
                 return $_SESSION[$key];
             } else {
                 return $data;
@@ -54,8 +63,9 @@ class SessionManager extends \SessionHandler
         }
     }
 
-    public function __set($key, $value) {
-        if(is_object($value)) {
+    public function __set($key, $value)
+    {
+        if (is_object($value)) {
             $_SESSION[$key] = serialize($value);
         } else {
             $_SESSION[$key] = $value;
@@ -74,7 +84,8 @@ class SessionManager extends \SessionHandler
 
     public function read($id)
     {
-        return openssl_decrypt(parent::read($id), $this->sessionCipherAlgo, $this->sessionCipherKey);
+        $data = openssl_decrypt(parent::read($id), $this->sessionCipherAlgo, $this->sessionCipherKey);
+        return $data === false ? '' : $data;
     }
 
     public function write($id, $data)
@@ -84,8 +95,8 @@ class SessionManager extends \SessionHandler
 
     public function start()
     {
-        if('' === session_id()) {
-            if(session_start()) {
+        if ('' === session_id()) {
+            if (session_start()) {
                 $this->setSessionStartTime();
                 $this->checkSessionValidity();
             }
@@ -94,7 +105,7 @@ class SessionManager extends \SessionHandler
 
     private function setSessionStartTime()
     {
-        if(!isset($this->sessionStartTime)) {
+        if (!isset($this->sessionStartTime)) {
             $this->sessionStartTime = time();
         }
         return true;
@@ -102,7 +113,7 @@ class SessionManager extends \SessionHandler
 
     private function checkSessionValidity()
     {
-        if((time() - $this->sessionStartTime) > ($this->ttl * 60)) {
+        if ((time() - $this->sessionStartTime) > ($this->ttl * 60)) {
             $this->renewSession();
             $this->generateFingerPrint();
         }
@@ -120,12 +131,23 @@ class SessionManager extends \SessionHandler
         session_unset();
 
         setcookie(
-            $this->sessionName, '', time() - 1000,
-            $this->sessionPath, $this->sessionDomain,
-            $this->sessionSSL, $this->sessionHTTPOnly
+            $this->sessionName,
+            '',
+            time() - 1000,
+            $this->sessionPath,
+            $this->sessionDomain,
+            $this->sessionSSL,
+            $this->sessionHTTPOnly
         );
 
         session_destroy();
+    }
+
+    public function setLanguage()
+    {
+        if (!isset($this->lang)) {
+            $this->lang = APP_DEFAULT_LANGUAGE;
+        }
     }
 
     private function generateFingerPrint()
@@ -138,13 +160,13 @@ class SessionManager extends \SessionHandler
 
     public function isValidFingerPrint()
     {
-        if(!isset($this->fingerPrint)) {
+        if (!isset($this->fingerPrint)) {
             $this->generateFingerPrint();
         }
 
         $fingerPrint = md5($_SERVER['HTTP_USER_AGENT'] . $this->cipherKey . session_id());
 
-        if($fingerPrint === $this->fingerPrint) {
+        if ($fingerPrint === $this->fingerPrint) {
             return true;
         }
 

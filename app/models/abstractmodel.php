@@ -8,7 +8,7 @@ class AbstractModel
     const DATA_TYPE_STR = \PDO::PARAM_STR;
     const DATA_TYPE_INT = \PDO::PARAM_INT;
     const DATA_TYPE_DECIMAL = 4;
-    const DATA_TYPE_DATE = 5;
+    const DATA_TYPE_DATE = \PDO::PARAM_STR;
 
     const VALIDATE_DATE_STRING = '/^[1-2][0-9][0-9][0-9]-(?:(?:0[1-9])|(?:1[0-2]))-(?:(?:0[1-9])|(?:(?:1|2)[0-9])|(?:3[0-1]))$/';
 

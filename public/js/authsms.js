@@ -4,10 +4,10 @@ $(document).ready(
 
         function loadProfile(uc)
         {
-            var location = 'https://' + window.location.hostname;
+            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: location + '/auth/loadprofile',
+                    url: theUrl + '/auth/loadprofile',
                     type: 'POST',
                     data: {
                         ucname: uc
@@ -41,10 +41,10 @@ $(document).ready(
 
         function loadPrivileges(uc)
         {
-            var location = 'https://' + window.location.hostname;
+            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: location + '/auth/loadprivileges',
+                    url: theUrl + '/auth/loadprivileges',
                     type: 'POST',
                     data: {
                         ucname: uc
@@ -78,10 +78,10 @@ $(document).ready(
 
         function doLogin()
         {
-            var location = 'https://' + window.location.hostname;
+            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: location + '/auth/dologin',
+                    url: theUrl + '/auth/dologin',
                     type: 'POST',
                     dataType: 'text',
                     beforeSend: function()
@@ -112,10 +112,10 @@ $(document).ready(
 
         function checkSMSValidity(uc)
         {
-            var location = 'https://' + window.location.hostname;
+            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: location + '/auth/checksms',
+                    url: theUrl + '/auth/checksms',
                     type: 'POST',
                     data: {
                         ucname: uc,
@@ -151,10 +151,10 @@ $(document).ready(
         $('#loginfrm').submit(function(e)
         {
             e.preventDefault();
-            var location = 'https://' + window.location.hostname;
+            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: location + '/auth/authenticate',
+                    url: theUrl + '/auth/authenticate',
                     type: 'POST',
                     data: {
                         ucname: $('#ucname').val(),

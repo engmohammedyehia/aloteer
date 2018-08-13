@@ -1,5 +1,6 @@
 sessions/*
 public/uploads/*
 .idea/*
-composer.lock
-phpunit.xml
+docker-compose.yaml
+default.conf
+db.sql
