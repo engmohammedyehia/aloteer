@@ -143,7 +143,8 @@ class IndexController extends AbstractController
 
             $this->_data['usersCount'] = UserModel::count();
 
-            $this->_data['transactionsCount'] = TransactionModel::count();
+            $transactionsCount = TransactionModel::getBy(['BranchId' => $this->session->u->BranchId]);
+            $this->_data['transactionsCount'] = false === $transactionsCount ? 0 : count($transactionsCount);
 
             $transactionsReviewCount = TransactionModel::getAllForReview(false, $this->session->u->BranchId);
             $this->_data['transactionsReviewCount'] = false === $transactionsReviewCount ? 0 : (int) count($transactionsReviewCount);
