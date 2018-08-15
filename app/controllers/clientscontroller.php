@@ -15,7 +15,7 @@ class ClientsController extends AbstractController
     private $_createActionRoles =
     [
         'name'                  => 'req|alpha|between(3,80)',
-        'id_type'               => 'req|num|inset[1,2]',
+        'id_type'               => 'req|num|inset[1,2,3]',
         'id_number'             => 'req|alphanum|max(15)|lang(en)',
         'mobile'                => 'req|alphanum|max(15)|lang(en)',
         'phone'                 => 'lang(en)',

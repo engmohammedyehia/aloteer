@@ -4,6 +4,7 @@ $_['title'] = 'Users and Privileges';
 $_['text_header'] = 'Users and Privileges';
 $_['text_new_item'] = 'New User';
 $_['text_table_username'] = 'Username';
+$_['text_table_employee'] = 'Employee Name';
 $_['text_table_group'] = 'User Group';
 $_['text_table_branch'] = 'Branch';
 $_['text_table_email'] = 'Email';

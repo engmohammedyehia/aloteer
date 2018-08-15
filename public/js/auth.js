@@ -3,10 +3,9 @@ $(document).ready(
     {
         function loadProfile(uc)
         {
-            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: theUrl + '/auth/loadprofile',
+                    url: window.location.origin + '/auth/loadprofile',
                     type: 'POST',
                     data: {
                         ucname: uc
@@ -39,10 +38,9 @@ $(document).ready(
 
         function loadPrivileges(uc)
         {
-            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: theUrl + '/auth/loadprivileges',
+                    url: window.location.origin + '/auth/loadprivileges',
                     type: 'POST',
                     data: {
                         ucname: uc
@@ -75,10 +73,9 @@ $(document).ready(
 
         function doLogin()
         {
-            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: theUrl + '/auth/dologin',
+                    url: window.location.origin + '/auth/dologin',
                     type: 'POST',
                     dataType: 'text',
                     beforeSend: function()
@@ -110,10 +107,9 @@ $(document).ready(
         $('#loginfrm').submit(function(e)
         {
             e.preventDefault();
-            var theUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port !== '' ? ':' + window.location.port : '');
             $.ajax(
                 {
-                    url: theUrl + '/auth/authenticate',
+                    url: window.location.origin + '/auth/authenticate',
                     type: 'POST',
                     data: {
                         ucname: $('#ucname').val(),

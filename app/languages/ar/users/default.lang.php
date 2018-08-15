@@ -4,6 +4,7 @@ $_['title'] = 'المستخدمين و الصلاحيات';
 $_['text_header'] = 'المستخدمين و الصلاحيات';
 $_['text_new_item'] = 'مستخدم جديد';
 $_['text_table_username'] = 'إسم المستخدم';
+$_['text_table_employee'] = 'اسم الموظف';
 $_['text_table_group'] = 'الصلاحية';
 $_['text_table_branch'] = 'الفرع';
 $_['text_table_email'] = 'البريد الالكتروني';

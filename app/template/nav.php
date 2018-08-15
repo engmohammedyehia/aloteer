@@ -149,7 +149,19 @@
                 <li><a class="<?= $this->matchUrl('/mail/sent') === true ? ' selected' : '' ?>" href="/mail/sent"><i class="fa fa-send"></i> <?= $text_mail_sent ?></a></li>
             </ul>
         </li>
-        <li><a class="<?= $this->matchUrl('/reports') === true ? ' selected' : '' ?>" href="/reports"><i class="fa fa-bar-chart"></i> <?= $text_reports ?></a></li>
+        <?php if((bool) preg_match('/reports/', $__privileges) || (bool) preg_match('/usersgroups/', $__privileges)): ?>
+        <li class="submenu<?= $this->matchUrl(['/reports', '/reports/daily', '/reports/client']) === true ? ' selected' : '' ?>">
+            <a href="javascript:;"><i class="fa fa-bar-chart"></i> <?= $text_reports ?></a>
+            <ul>
+                <?php if(array_key_exists('/reports/daily', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/reports/daily') === true ? ' selected' : '' ?>" href="/reports/daily"><?= $text_reports_daily ?></a></li>
+                <?php endif; ?>
+                <?php if(array_key_exists('/reports/client', $__privilegesKeys)): ?>
+                <li><a class="<?= $this->matchUrl('/reports/client') === true ? ' selected' : '' ?>" href="/reports/client"><?= $text_reports_client ?></a></li>
+                <?php endif; ?>
+            </ul>
+        </li>
+        <?php endif; ?>
         <li><a class="<?= $this->matchUrl('/notifications') === true ? ' selected' : '' ?>" href="/notifications"><i class="fa fa-bell"></i> <?= $text_notifications ?></a></li>
     </ul>
     <div class="user_tools">

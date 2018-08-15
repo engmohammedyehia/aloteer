@@ -59,15 +59,15 @@ class TransactionStatusModel extends AbstractModel
         return false === $results ? false : $results->current();
     }
 
-    public static function getLatestStatuses()
+    public static function getLatestStatuses($branch = false)
     {
         return self::get(
-            'SELECT t1.*, CONCAT_WS(" ", t2.FirstName, t2.LastName) name, t2.Image, t3.TransactionTitle 
+            'SELECT t1.*, CONCAT_WS(" ", t2.FirstName, t2.LastName) name, t2.Image, t3.TransactionTitle, t3.BranchId 
                   FROM ' . self::$tableName . ' t1 
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t2
                   ON t2.UserId = t1.UserId 
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t3
-                  ON t3.TransactionId = t1.TransactionId 
+                  ON t3.TransactionId = t1.TransactionId ' . (false === $branch ? '' : ' HAVING t3.BranchId = ' . $branch) . '
                   ORDER BY StatusId DESC LIMIT 4'
         );
     }

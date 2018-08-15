@@ -5,13 +5,17 @@
             <label<?= $this->labelFloat('TransactionTitle', $transaction) ?>><?= $text_label_TransactionTitle ?></label>
             <input disabled required type="text" name="TransactionTitle" id="TransactionTitle" maxlength="80" value="<?= $this->showValue('TransactionTitle', $transaction) ?>">
         </div>
-        <div class="input_wrapper_other n50 right_padding select required">
+        <div class="input_wrapper_other n25 full_padding select required border">
             <select disabled required name="TransactionTypeId" id="TransactionTypeId">
                 <option value=""><?= $text_label_TransactionTypeId_select ?></option>
                 <?php if (false !== $types): foreach ($types as $type): ?>
                     <option <?= $this->selectedIf('TransactionTypeId', $type->TransactionTypeId, $transaction) ?> value="<?= $type->TransactionTypeId ?>"><?= $type->TransactionType ?></option>
                 <?php endforeach; endif; ?>
             </select>
+        </div>
+        <div class="input_wrapper n25 padding">
+            <label<?= $this->labelFloat('Payment', $transaction) ?>><?= $text_label_Payment ?> <span class="required">*</span></label>
+            <input disabled required type="number" name="Payment" min="1" step="1" value="<?= $this->showValue('Payment', $transaction) ?>">
         </div>
         <div class="input_wrapper_other n50 left_padding select required border">
             <select disabled required name="ClientId" id="ClientId">

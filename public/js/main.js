@@ -1,5 +1,5 @@
 if(typeof $('table.data').DataTable === 'function') {
-    $('table.data').DataTable(
+    $('table.data').not('.report').DataTable(
         {
             initComplete: function () {
                 if($(this).hasClass('cheque')) {
@@ -34,7 +34,7 @@ if(typeof $('table.data').DataTable === 'function') {
             ]
         }
     );
-    $('table.data').on( 'draw.dt', function () {
+    $('table.data').not('.report').on( 'draw.dt', function () {
         $('a.open_controls').off('click');
         $('a.open_controls').click(function(evt)
         {
@@ -91,14 +91,14 @@ $('a.menu_switch').click(function(evt)
         $('nav.main_navigation').addClass('opened');
         $('div.action_view').addClass('collapsed');
         if(getCookie('menu_opened') == "") {
-            setCookie('menu_opened', true, 180, '.madinahcheque.dev');
+            setCookie('menu_opened', true, 180, window.location.origin);
         }
     } else {
         $(this).attr('data-menu-status', 'false');
         $(this).removeClass('opened');
         $('nav.main_navigation').removeClass('opened');
         $('div.action_view').removeClass('collapsed');
-        deleteCookie('menu_opened', '.madinahcheque.dev');
+        deleteCookie('menu_opened', window.location.origin);
     }
 });
 
@@ -196,7 +196,7 @@ $('li.submenu > a').click(function()
         userNameField.addEventListener('blur', function()
         {
             var req = new XMLHttpRequest();
-            req.open('POST', 'https://www.madinahcheque.dev/users/checkuserexistsajax');
+            req.open('POST', window.location.origin + '/users/checkuserexistsajax');
             req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
             req.onreadystatechange = function()
@@ -272,7 +272,9 @@ $("input[data-language=en]").keypress(function(evt){
     return false;
 });
 
-$('select[data-selectivity]').selectivity();
+$('select[data-selectivity]').selectivity({
+    allowClear: false
+});
 
 $('#OnBank').on('keyup', function()
 {

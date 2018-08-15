@@ -81,22 +81,24 @@ class ChequeModel extends AbstractModel
         );
     }
 
-    public static function getPrintedCheques()
+    public static function getPrintedCheques($startDate = false, $endDate = false, $branch = false, $client = false)
     {
-        return self::get(
-            'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+        $sql = 'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
                   (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
                   FROM ' . self::$tableName . ' t1
                   INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
                   INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
-                  WHERE (t1.Status = ' . self::CHEQUE_ORDER_PRINTED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED . ')'
-
-        );
+                  WHERE (t1.Status = ' . self::CHEQUE_ORDER_PRINTED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED . ' OR t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED . ')';
+        $sql .= $startDate !== false ? ' AND t1.Created >= "' . $startDate . '"' : '';
+        $sql .= $endDate !== false ? ' AND t1.Created <= "' . $endDate . '"' : '';
+        $sql .= $branch !== false ? ' AND t1.BranchId = ' . $branch : '';
+        $sql .= $client !== false ? ' AND t1.ClientId = ' . $client : '';
+        return self::get($sql);
     }
 
-    public static function getHandedOverToClientCheques()
+    public static function getHandedOverToClientCheques($branch = false)
     {
         return self::get(
             'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
@@ -106,7 +108,8 @@ class ChequeModel extends AbstractModel
                   INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
                   INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
                   INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
-                  WHERE t1.Status = ' . self::CHEQUE_ORDER_HANDED_TO_CLIENT
+                  WHERE t1.Status = ' . self::CHEQUE_ORDER_HANDED_TO_CLIENT .
+                  ($branch === false ? '' : ' AND t1.BranchId = ' . $branch)
 
         );
     }
@@ -141,10 +144,11 @@ class ChequeModel extends AbstractModel
         );
     }
 
-    public static function getNotCoveredCheques()
+    public static function getNotCoveredCheques($branch = false)
     {
         $cheques = self::get(
-            'SELECT * FROM ' . self::$tableName . ' WHERE Status = ' . self::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED
+            'SELECT * FROM ' . self::$tableName . ' WHERE Status = ' . self::CHEQUE_ORDER_READY_BALANCE_NOT_COVERED .
+            (false === $branch ? '' : ' AND BranchId = ' . $branch)
         );
         return false !== $cheques ? count($cheques) : 0;
     }
@@ -152,7 +156,35 @@ class ChequeModel extends AbstractModel
     public static function getMonthlyIssuedChequesPerBranch($branchId, $month)
     {
         return self::get('
-              SELECT COUNT(*) as c FROM ' . self::$tableName . ' WHERE month(CreatedJ) = ' . $month . ' AND year(CreatedJ) = ' . date('Y') . ' AND BranchId = ' . $branchId . ' AND Status = ' . self::CHEQUE_ORDER_HANDED_TO_CLIENT
+              SELECT COUNT(*) as c FROM ' . self::$tableName . ' WHERE month(CreatedJ) = ' . $month . ' AND year(CreatedJ) = ' . date('Y') . ' AND BranchId = ' . $branchId . ' AND Status = ' . self::CHEQUE_ORDER_PRINTED
         )->current()->c;
+    }
+
+    public static function getChequesForReport($startDate = false, $branch = false)
+    {
+        $sql = 'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+                  FROM ' . self::$tableName . ' t1
+                  INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
+                  INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
+                  INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId
+                  WHERE t1.Status = ' . self::CHEQUE_ORDER_READY_BALANCE_COVERED;
+        $sql .= $startDate !== false ? ' AND t1.Created = "' . $startDate . '"' : '';
+        $sql .= $branch !== false ? ' AND t1.BranchId = ' . $branch : '';
+        return self::get($sql);
+    }
+
+    public static function getChequesForClientReport($client)
+    {
+        $sql = 'SELECT t1.*, t2.TransactionTitle, t4.BankName, CONCAT_WS(" ", t5.FirstName, t5.LastName) UserName, t10.BranchName, 
+                  (SELECT BankBranchName From ' . BankBranchModel::getModelTableName() . ' WHERE BankBranchId = (SELECT BankBranchId FROM ' . BankAccountModel::getModelTableName() .  ' WHERE AccountId = t1.AccountId)) BankBranchName
+                  FROM ' . self::$tableName . ' t1
+                  INNER JOIN ' . TransactionModel::getModelTableName() . ' t2 ON t2.TransactionId = t1.TransactionId
+                  INNER JOIN ' . BankAccountModel::getModelTableName() . ' t4 ON t4.AccountId = t1.AccountId
+                  INNER JOIN ' . UserProfileModel::getModelTableName() . ' t5 ON t5.UserId = t1.UserId
+                  INNER JOIN ' . BranchModel::getModelTableName() . ' t10 ON t10.BranchId = t1.BranchId';
+        $sql .= ' AND t1.ClientId = ' . $client;
+        return self::get($sql);
     }
 }

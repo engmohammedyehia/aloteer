@@ -24,7 +24,16 @@ class AuditController extends AbstractController
         $this->language->load('template.common');
         $this->language->load('audit.default');
 
-        $this->_data['orders'] = AuditModel::getAll();
+        // Auditor
+        if((int) $this->session->u->GroupId === 6) {
+            $this->_data['orders'] = AuditModel::getAllForAuditors($this->session->u->UserId);
+        // Branch Manager
+        } elseif ((int) $this->session->u->GroupId === 7) {
+            $this->_data['orders'] = AuditModel::getAllForManagers($this->session->u->BranchId);
+        // Finance Manager or CEO or Vice Presiendet
+        } else {
+            $this->_data['orders'] = AuditModel::getAll();
+        }
 
         $this->_view();
     }
@@ -35,7 +44,16 @@ class AuditController extends AbstractController
         $this->language->load('audit.review');
         $this->language->load('transactions.status');
 
-        $this->_data['transactions'] = TransactionModel::getAllForReview();
+        // Auditor
+        if((int) $this->session->u->GroupId === 6) {
+            $this->_data['transactions'] = TransactionModel::getAllForReview($this->session->u->UserId);
+            // Branch Manager
+        } elseif ((int) $this->session->u->GroupId === 7) {
+            $this->_data['transactions'] = TransactionModel::getAllForReview(false, $this->session->u->BranchId);
+            // Finance Manager or CEO or Vice President
+        } else {
+            $this->_data['transactions'] = TransactionModel::getAllForReview();
+        }
 
         $this->_view();
     }
@@ -46,7 +64,16 @@ class AuditController extends AbstractController
         $this->language->load('audit.reviewed');
         $this->language->load('transactions.status');
 
-        $this->_data['transactions'] = TransactionModel::getAllForReviewed();
+        // Auditor
+        if((int) $this->session->u->GroupId === 6) {
+            $this->_data['transactions'] = TransactionModel::getAllForReviewed($this->session->u->UserId);
+            // Branch Manager
+        } elseif ((int) $this->session->u->GroupId === 7) {
+            $this->_data['transactions'] = TransactionModel::getAllForReviewed(false, $this->session->u->BranchId);
+            // Finance Manager or CEO or Vice President
+        } else {
+            $this->_data['transactions'] = TransactionModel::getAllForReviewed();
+        }
 
         $this->_view();
     }

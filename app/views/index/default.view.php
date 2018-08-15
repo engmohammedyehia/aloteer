@@ -38,9 +38,9 @@
         </div>
         <div class="stat_box">
             <span><?= $text_cheque_no_coverage_count ?></span>
-            <i class="fa fa-money"></i>
-            <span><?= $notCoveredCheques ?></span>
-            <footer><?= $text_cheque_no_coverage_rate ?><a href="/cheques/printed"><i class="material-icons"><?= $this->session->lang == 'ar' ? 'keyboard_arrow_left' : 'keyboard_arrow_right' ?></i></a></footer>
+            <i class="fa fa-credit-card-alt"></i>
+            <span><?= $closedTransactions ?></span>
+            <footer><?= $text_cheque_no_coverage_rate ?><a href="/transactions/closed"><i class="material-icons"><?= $this->session->lang == 'ar' ? 'keyboard_arrow_left' : 'keyboard_arrow_right' ?></i></a></footer>
         </div>
         <div class="stat_box">
             <span><?= $text_online_count ?></span>

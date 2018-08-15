@@ -37,4 +37,38 @@ class AuditModel extends AbstractModel
                  '
         );
     }
+
+    public static function getAllForManagers($branch)
+    {
+        return self::get(
+            'SELECT t1.*, DATE_FORMAT(t1.Created, "%Y-%m-%d") Created, t2.TransactionTitle, t2.BranchId, 
+                    CONCAT_WS(" ", t3.FirstName, t3.LastName) AssignedByName, 
+                    CONCAT_WS(" ", t4.FirstName, t4.LastName) AssignedToName
+                    FROM ' . self::$tableName . ' t1 
+                    INNER JOIN ' . TransactionModel::getModelTableName() . ' t2
+                    ON t2.TransactionId = t1.TransactionId
+                    INNER JOIN ' . UserProfileModel::getModelTableName() . ' t3
+                    ON t3.UserId = t1.AssignedBy
+                    INNER JOIN ' . UserProfileModel::getModelTableName() . ' t4
+                    ON t4.UserId = t1.UserId
+                    WHERE t2.BranchId = ' . $branch
+        );
+    }
+
+    public static function getAllForAuditors($user)
+    {
+        return self::get(
+            'SELECT t1.*, DATE_FORMAT(t1.Created, "%Y-%m-%d") Created, t2.TransactionTitle, 
+                    CONCAT_WS(" ", t3.FirstName, t3.LastName) AssignedByName, 
+                    CONCAT_WS(" ", t4.FirstName, t4.LastName) AssignedToName
+                    FROM ' . self::$tableName . ' t1 
+                    INNER JOIN ' . TransactionModel::getModelTableName() . ' t2
+                    ON t2.TransactionId = t1.TransactionId
+                    INNER JOIN ' . UserProfileModel::getModelTableName() . ' t3
+                    ON t3.UserId = t1.AssignedBy
+                    INNER JOIN ' . UserProfileModel::getModelTableName() . ' t4
+                    ON t4.UserId = t1.UserId
+                    WHERE t1.UserId = ' . $user
+        );
+    }
 }

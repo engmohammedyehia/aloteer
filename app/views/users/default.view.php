@@ -4,6 +4,7 @@
         <thead>
             <tr>
                 <th><?= $text_table_username ?></th>
+                <th><?= $text_table_employee ?></th>
                 <th><?= $text_table_group ?></th>
                 <th><?= $text_table_branch ?></th>
                 <th><?= $text_table_email ?></th>
@@ -16,6 +17,7 @@
         <?php if(false !== $users): foreach ($users as $user): ?>
             <tr>
                 <td><?= $user->Username ?></td>
+                <td><?= $user->FirstName ?> <?= $user->LastName ?></td>
                 <td><?= $user->GroupName ?></td>
                 <td><?= $user->BranchName ?></td>
                 <td><?= $user->Email ?></td>

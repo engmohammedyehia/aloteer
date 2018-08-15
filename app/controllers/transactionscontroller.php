@@ -45,7 +45,10 @@ class TransactionsController extends AbstractController
         // Auditor
         if((int) $this->session->u->GroupId === 6) {
             $this->_data['transactions'] = TransactionModel::getAllForAuditors($this->session->u->BranchId);
-        // Branch Manager
+        // Accountant
+        } elseif((int) $this->session->u->GroupId === 5) {
+            $this->_data['transactions'] = TransactionModel::getAllForAccountants($this->session->u->UserId);
+            // Branch Manager
         } elseif ((int) $this->session->u->GroupId === 7) {
             $this->_data['transactions'] = TransactionModel::getAll($this->session->u->BranchId);
         // Finance Manager or CEO or Vice Presiendet
@@ -64,6 +67,24 @@ class TransactionsController extends AbstractController
         $this->language->load('transactions.canceled');
 
         $this->_data['transactions'] = TransactionDeletedModel::getAll();
+
+        $this->_view();
+    }
+
+    public function closedAction()
+    {
+        $this->language->load('template.common');
+        $this->language->load('transactions.default');
+        $this->language->load('transactions.status');
+        $this->language->load('transactions.closed');
+
+        // Auditor
+        if ((int) $this->session->u->GroupId === 7) {
+            $this->_data['transactions'] = TransactionModel::getAllClosed($this->session->u->BranchId);
+            // Finance Manager or CEO or Vice Presiendet
+        } else {
+            $this->_data['transactions'] = TransactionModel::getAllClosed();
+        }
 
         $this->_view();
     }

@@ -2,9 +2,19 @@
 namespace PHPMVC\Controllers;
 
 use PHPMVC\LIB\FrontController;
+use PHPMVC\LIB\Language;
+use PHPMVC\lib\Messenger;
+use PHPMVC\LIB\SessionManager;
 use PHPMVC\LIB\Template;
 use PHPMVC\Lib\Validate;
 
+/**
+ * Class AbstractController
+ * @package PHPMVC\Controllers
+ * @property Messenger messenger
+ * @property Language language
+ * @property SessionManager session
+ */
 class AbstractController
 {
 

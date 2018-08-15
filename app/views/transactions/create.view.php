@@ -20,7 +20,7 @@
         </div>
         <div class="input_wrapper_other n50 left_padding select required border">
             <span class="required">*</span>
-            <select required name="ClientId" id="ClientId">
+            <select data-selectivity="true" required name="ClientId" id="ClientId">
                 <option value=""><?= $text_label_ClientId_select ?></option>
                 <?php if (false !== $clients): foreach ($clients as $client): ?>
                     <option <?= $this->selectedIf('ClientId', $client->id) ?> value="<?= $client->id ?>"><?= $client->name ?></option>
@@ -29,7 +29,7 @@
         </div>
         <div class="input_wrapper_other n50 padding select required">
             <span class="required">*</span>
-            <select required name="ProjectId" id="ProjectId">
+            <select data-selectivity="true" required name="ProjectId" id="ProjectId">
                 <option value=""><?= $text_label_ProjectId_select ?></option>
                 <?php if (false !== $projects): foreach ($projects as $project): ?>
                     <option <?= $this->selectedIf('ProjectId', $project->ProjectId) ?> value="<?= $project->ProjectId ?>"><?= $project->ProjectName ?></option>

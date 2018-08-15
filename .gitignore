@@ -4,3 +4,4 @@ public/uploads/*
 docker-compose.yaml
 default.conf
 db.sql
+dbdata
